@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29411.138
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethereum.Metamask.Blazor", "Nethereum.Metamask.Blazor\Nethereum.Metamask.Blazor.csproj", "{C23BBD11-7E79-42CC-AB7E-4EC8E444D442}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C23BBD11-7E79-42CC-AB7E-4EC8E444D442}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C23BBD11-7E79-42CC-AB7E-4EC8E444D442}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C23BBD11-7E79-42CC-AB7E-4EC8E444D442}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C23BBD11-7E79-42CC-AB7E-4EC8E444D442}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {649AA85A-ED5E-4E04-81A6-5BEBCEF3771E}
+	EndGlobalSection
+EndGlobal
