@@ -58,7 +58,7 @@ Selected Account: @SelectedAccount
             var web3 = new Nethereum.Web3.Web3();
             web3.Client.OverridingRequestInterceptor = metamaskInterceptor;
 
-            TransactionHash = await web3.Eth.GetEtherTransferService().TransferEtherAsync("0x13f022d72158410433cbd66f5dd8bf6d2d129924", 1.11m);
+            TransactionHash = await web3.Eth.GetEtherTransferService().TransferEtherAsync("0x13f022d72158410433cbd66f5dd8bf6d2d129924", 0.001m);
         }
         catch(Exception ex)
         {
