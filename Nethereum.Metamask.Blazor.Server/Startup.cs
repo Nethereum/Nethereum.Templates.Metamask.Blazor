@@ -28,9 +28,9 @@ namespace Nethereum.Metamask.Blazor.Server
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<IMetamaskInterop, MetamaskBlazorInterop>();
-            services.AddSingleton<MetamaskService>();
-            services.AddSingleton<MetamaskInterceptor>();
+            services.AddScoped<IMetamaskInterop, MetamaskBlazorInterop>();
+            services.AddScoped<MetamaskService>();
+            services.AddScoped<MetamaskInterceptor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

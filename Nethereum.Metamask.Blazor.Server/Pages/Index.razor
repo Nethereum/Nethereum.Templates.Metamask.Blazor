@@ -30,7 +30,7 @@ Selected Account: @SelectedAccount
     string TransactionHash { get; set; }
     string ErrorTransferMessage { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstTime)
     {
         MetamaskAvailable = await metamaskService.CheckMetamaskAvailability();
     }
