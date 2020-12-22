@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.JSInterop;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
@@ -13,9 +15,10 @@ namespace Nethereum.Metamask.Blazor
         {
             _jsRuntime = jsRuntime;
         }
-        public async ValueTask<bool> EnableEthereumAsync()
+
+        public async ValueTask<string> EnableEthereumAsync()
         {
-            return await _jsRuntime.InvokeAsync<bool>("NethereumMetamaskInterop.EnableEthereum");
+            return await _jsRuntime.InvokeAsync<string>("NethereumMetamaskInterop.EnableEthereum");
         }
 
         public async ValueTask<bool> CheckMetamaskAvailability()
@@ -35,6 +38,12 @@ namespace Nethereum.Metamask.Blazor
             return JsonConvert.DeserializeObject<RpcResponseMessage>(response);
         }
 
+        public async ValueTask<string> SignAsync(string utf8Hex)
+        {
+            var result = await  _jsRuntime.InvokeAsync<string>("NethereumMetamaskInterop.Sign", utf8Hex);
+            return result.Trim('"');
+        }
+
         public async ValueTask<string> GetSelectedAddress()
         {
             return await _jsRuntime.InvokeAsync<string>("NethereumMetamaskInterop.GetSelectedAddress");
@@ -44,13 +53,13 @@ namespace Nethereum.Metamask.Blazor
         [JSInvokable()]
         public static async Task MetamaskAvailableChanged(bool available)
         {
-            await MetamaskService.Current.ChangeMetamaskAvailableAsync(available);
+            await MetamaskHostProvider.Current.ChangeMetamaskAvailableAsync(available);
         }
 
         [JSInvokable()]
         public static async Task SelectedAccountChanged(string selectedAccount)
         {
-            await MetamaskService.Current.ChangeSelectedAccountAsync(selectedAccount);
+            await MetamaskHostProvider.Current.ChangeSelectedAccountAsync(selectedAccount);
         }
     }
 }

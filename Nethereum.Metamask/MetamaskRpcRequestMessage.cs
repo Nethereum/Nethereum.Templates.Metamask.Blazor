@@ -1,7 +1,7 @@
 ﻿using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
 
-namespace Nethereum.Metamask.Blazor
+namespace Nethereum.Metamask
 {
     public class MetamaskRpcRequestMessage : RpcRequestMessage
     {

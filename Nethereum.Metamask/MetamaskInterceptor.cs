@@ -4,17 +4,17 @@ using Nethereum.JsonRpc.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Nethereum.RPC.Eth.DTOs;
 
-namespace Nethereum.Metamask.Blazor
+namespace Nethereum.Metamask
 {
     public class MetamaskInterceptor : RequestInterceptor
     {
         private readonly IMetamaskInterop _metamaskInterop;
-        private readonly MetamaskService _metamaskService;
+        private readonly MetamaskHostProvider _metamaskHostProvider;
 
-        public MetamaskInterceptor(IMetamaskInterop metamaskInterop, MetamaskService metamaskService)
+        public MetamaskInterceptor(IMetamaskInterop metamaskInterop, MetamaskHostProvider metamaskHostProvider)
         {
             _metamaskInterop = metamaskInterop;
-            _metamaskService = metamaskService;
+            _metamaskHostProvider = metamaskHostProvider;
         }
 
         public override async Task<object> InterceptSendRequestAsync<T>(
@@ -24,9 +24,9 @@ namespace Nethereum.Metamask.Blazor
             if (request.Method == "eth_sendTransaction")
             {
                 var transaction = (TransactionInput)request.RawParameters[0];
-                transaction.From = _metamaskService.SelectedAccount;
+                transaction.From = _metamaskHostProvider.SelectedAccount;
                 request.RawParameters[0] = transaction;
-                var response = await _metamaskInterop.SendAsync(new MetamaskRpcRequestMessage(request.Id, request.Method, _metamaskService.SelectedAccount,
+                var response = await _metamaskInterop.SendAsync(new MetamaskRpcRequestMessage(request.Id, request.Method, GetSelectedAccount(),
                     request.RawParameters));
                 return ConvertResponse<T>(response);
             }
@@ -47,19 +47,24 @@ namespace Nethereum.Metamask.Blazor
             if (method == "eth_sendTransaction")
             {
                 var transaction = (TransactionInput)paramList[0];
-                transaction.From = _metamaskService.SelectedAccount;
+                transaction.From = GetSelectedAccount();
                 paramList[0] = transaction;
-                var response = await _metamaskInterop.SendAsync(new MetamaskRpcRequestMessage(route, method, _metamaskService.SelectedAccount, 
+                var response = await _metamaskInterop.SendAsync(new MetamaskRpcRequestMessage(route, method, GetSelectedAccount(), 
                     paramList));
                 return ConvertResponse<T>(response);
             }
             else
             {
-                var response = await _metamaskInterop.SendAsync(new RpcRequestMessage(route, _metamaskService.SelectedAccount, method,
+                var response = await _metamaskInterop.SendAsync(new RpcRequestMessage(route, GetSelectedAccount(), method,
                     paramList));
                 return ConvertResponse<T>(response);
             }
           
+        }
+
+        private string GetSelectedAccount()
+        {
+            return _metamaskHostProvider.SelectedAccount;
         }
 
         protected void HandleRpcError(RpcResponseMessage response)
