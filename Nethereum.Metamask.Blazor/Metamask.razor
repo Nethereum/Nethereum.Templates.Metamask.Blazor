@@ -1,0 +1,54 @@
+﻿@inject MetamaskHostProvider _metamaskHostProvider;
+@inject NethereumAuthenticator  _nethereumAuthenticator;
+
+<div>
+    @if (MetamaskAvailable && !string.IsNullOrEmpty(SelectedAccount))
+    {
+        @SelectedAccount
+    }
+
+    @if (MetamaskAvailable && string.IsNullOrEmpty(SelectedAccount))
+    {
+        <button type="button" class="btnMetamask" @onclick="@EnableEthereumAsync">Connect Metamask</button>
+    }
+
+    @if (!MetamaskAvailable)
+    {
+        <button class="btnMetamask" disabled>Please Install Metamask</button>
+    }
+
+</div>
+
+@code {
+
+    bool MetamaskAvailable { get; set; }
+    string SelectedAccount { get; set; }
+    protected string AuthenticatedAccount { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _metamaskHostProvider.SelectedAccountChanged += MetamaskHostProvider_SelectedAccountChanged;
+            MetamaskAvailable = await _metamaskHostProvider.CheckProviderAvailabilityAsync();
+
+            StateHasChanged();
+        }
+    }
+
+    private async Task MetamaskHostProvider_SelectedAccountChanged(string account)
+    {
+        SelectedAccount = account;
+        this.StateHasChanged();
+    }
+
+    protected async Task EnableEthereumAsync()
+    {
+        SelectedAccount = await _metamaskHostProvider.EnableProviderAsync();
+    }
+
+    public async Task AuthenticateAsync()
+    {
+        AuthenticatedAccount = await _nethereumAuthenticator.RequestNewChallengeSignatureAndRecoverAccountAsync();
+    }
+}

@@ -1,6 +1,6 @@
 # Nethereum.Metamask.Blazor
 Metamask + Nethereum + Blazor interop
-![Metamask](screenshots/metamaskinterop.png "Metamask Blazor Netehreum")
+![Metamask](screenshots/quickdemo.gif "Metamask Blazor Netehreum")
 
 ```csharp
   bool MetamaskAvailable { get; set; }

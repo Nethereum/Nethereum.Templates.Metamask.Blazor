@@ -5,11 +5,7 @@
 @using Nethereum.Web3;
 @using Nethereum.Hex.HexTypes;
 <br />
-Available Metamask : @MetamaskAvailable
-<br />
 Selected Account: @SelectedAccount
-<br />
-<button @onclick="@EnableEthereumAsync">Enable Ethereum</button>
 <br />
 <button @onclick="@GetBlockHashAsync">Get BlockHash</button>
 <br />
@@ -27,11 +23,11 @@ Selected Account: @SelectedAccount
 
 @code{
 
-        bool MetamaskAvailable { get; set; }
-        string SelectedAccount { get; set; }
-        string BlockHash { get; set; }
-        string TransactionHash { get; set; }
-        string ErrorTransferMessage { get; set; }
+    bool MetamaskAvailable { get; set; }
+    string SelectedAccount { get; set; }
+    string BlockHash { get; set; }
+    string TransactionHash { get; set; }
+    string ErrorTransferMessage { get; set; }
     protected string AuthenticatedAccount { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstTime)
@@ -48,11 +44,6 @@ Selected Account: @SelectedAccount
     {
         SelectedAccount = account;
         this.StateHasChanged();
-    }
-
-    protected async Task EnableEthereumAsync()
-    {
-        SelectedAccount = await _metamaskHostProvider.EnableProviderAsync();
     }
 
     protected async Task GetBlockHashAsync()
