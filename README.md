@@ -3,18 +3,14 @@ Metamask + Nethereum + Blazor interop
 ![Metamask](screenshots/quickdemo.gif "Metamask Blazor Netehreum")
 
 ```csharp
-  @page "/"
+@page "/"
 @inject IJSRuntime jsRuntime;
 @inject MetamaskHostProvider _metamaskHostProvider;
 @inject NethereumAuthenticator  _nethereumAuthenticator;
 @using Nethereum.Web3;
 @using Nethereum.Hex.HexTypes;
 <br />
-Available Metamask : @MetamaskAvailable
-<br />
 Selected Account: @SelectedAccount
-<br />
-<button @onclick="@EnableEthereumAsync">Enable Ethereum</button>
 <br />
 <button @onclick="@GetBlockHashAsync">Get BlockHash</button>
 <br />
@@ -52,10 +48,6 @@ Selected Account: @SelectedAccount
         this.StateHasChanged();
     }
 
-    protected async Task EnableEthereumAsync()
-    {
-        SelectedAccount = await _metamaskHostProvider.EnableProviderAsync();
-    }
 
     protected async Task GetBlockHashAsync()
     {
