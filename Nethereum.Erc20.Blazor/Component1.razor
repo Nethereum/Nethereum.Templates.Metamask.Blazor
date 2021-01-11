@@ -1,0 +1,43 @@
+﻿@using Nethereum.UI;
+@inject IEthereumHostProvider _ethereuHostProvider;
+
+<div class="card">
+    <h5 class="card-header">Transfer ERC0 Token</h5>
+    <div class="card-body">
+        <div class="form-group row">
+            <label for="fromAccount" class="col-sm-1 col-form-label">From Account:  </label>
+        </div>
+        <div class="form-group row">
+            <label for="" class="col-sm-1 col-form-label">Contract Address:</label>
+            <div class="col-sm-10">
+                <input id="TokenContractAddress" class="form-control" bind="@SendTransactionViewModel.ContractAddress" type="text" />
+                <small id="TokenContractAddressHelp" class="form-text text-muted">The ERC20 contract address</small>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="" class="col-sm-1 col-form-label">Decimal Places:</label>
+            <div class="col-sm-10">
+                <input id="TokenDecimalPlaces" class="form-control" bind="@SendTransactionViewModel.DecimalPlaces" type="text" />
+                <small id="TokenDecimalPlacesHelp" class="form-text text-muted">The number of decimal places of ERC20 Token</small>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="toAccount" class="col-sm-1 col-form-label">To Account:</label>
+            <div class="col-sm-10">
+                <input id="toAccount" class="form-control" bind="@SendTransactionViewModel.TransferTo" type="text" />
+                <small id="toAccountHelp" class="form-text text-muted">The account address to transfer the token to</small>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="etherAmount" class="col-sm-1 col-form-label">Token Amount:</label>
+            <div class="col-sm-10">
+                <input id="tokenAmount" class="form-control" bind="@SendTransactionViewModel.TokenAmount" type="text" />
+                <small id="tokenAmountHelp" class="form-text text-muted">The token amount to transfer</small>
+            </div>
+        </div>
+
+        <div><a href="/transaction/@LatestTransactionHash"> @LatestTransactionHash</a></div>
+    </div>
+</div>
+

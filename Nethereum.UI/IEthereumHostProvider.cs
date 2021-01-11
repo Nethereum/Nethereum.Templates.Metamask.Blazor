@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Nethereum.Metamask
+namespace Nethereum.UI
 {
     public interface IEthereumHostProvider
     {

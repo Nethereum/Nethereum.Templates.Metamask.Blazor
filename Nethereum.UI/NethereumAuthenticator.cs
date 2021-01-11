@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Nethereum.Signer;
 
-namespace Nethereum.Metamask
+namespace Nethereum.UI
 {
     public class NethereumAuthenticator
     {

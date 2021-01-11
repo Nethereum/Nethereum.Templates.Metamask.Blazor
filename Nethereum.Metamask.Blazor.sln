@@ -9,7 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethereum.Metamask.Blazor",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethereum.Metamask.Blazor.Wasm", "Nethereum.Metamask.Blazor.Wasm\Nethereum.Metamask.Blazor.Wasm.csproj", "{7D3DFB3E-27F8-4DF5-8138-3E5ADB8E024E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethereum.Metamask.Blazor.Server", "Nethereum.Metamask.Blazor.Server\Nethereum.Metamask.Blazor.Server.csproj", "{BBB623F9-4CDE-4F96-8314-1103511F28A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethereum.Metamask.Blazor.Server", "Nethereum.Metamask.Blazor.Server\Nethereum.Metamask.Blazor.Server.csproj", "{BBB623F9-4CDE-4F96-8314-1103511F28A1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethereum.Erc20.Blazor", "Nethereum.Erc20.Blazor\Nethereum.Erc20.Blazor.csproj", "{684324A1-4DA3-4A69-80C5-2AB6A615E4C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethereum.UI", "Nethereum.UI\Nethereum.UI.csproj", "{413C8C5B-EC70-41F6-9C67-CDDC44C99455}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{BBB623F9-4CDE-4F96-8314-1103511F28A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBB623F9-4CDE-4F96-8314-1103511F28A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBB623F9-4CDE-4F96-8314-1103511F28A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{684324A1-4DA3-4A69-80C5-2AB6A615E4C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{684324A1-4DA3-4A69-80C5-2AB6A615E4C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{684324A1-4DA3-4A69-80C5-2AB6A615E4C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{684324A1-4DA3-4A69-80C5-2AB6A615E4C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{413C8C5B-EC70-41F6-9C67-CDDC44C99455}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{413C8C5B-EC70-41F6-9C67-CDDC44C99455}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{413C8C5B-EC70-41F6-9C67-CDDC44C99455}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{413C8C5B-EC70-41F6-9C67-CDDC44C99455}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
