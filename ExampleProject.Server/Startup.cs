@@ -1,17 +1,14 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Nethereum.Metamask;
+using Nethereum.Metamask.Blazor;
 using Nethereum.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using FluentValidation;
 
-namespace Nethereum.Metamask.Blazor.Server
+namespace ExampleProject.Server
 {
     public class Startup
     {
@@ -35,6 +32,7 @@ namespace Nethereum.Metamask.Blazor.Server
             services.AddScoped<MetamaskHostProvider>();
             services.AddScoped<IEthereumHostProvider, MetamaskHostProvider>();
             services.AddScoped<NethereumAuthenticator>();
+            services.AddValidatorsFromAssemblyContaining<Nethereum.Erc20.Blazor.Erc20Transfer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

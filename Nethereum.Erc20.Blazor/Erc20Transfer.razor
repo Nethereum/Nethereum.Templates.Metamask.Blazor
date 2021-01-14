@@ -1,0 +1,95 @@
+﻿@using Nethereum.UI;
+@using FluentValidation;
+@using Accelist.FluentValidation.Blazor;
+@using Microsoft.AspNetCore.Components.Forms
+@using Nethereum.StandardTokenEIP20.ContractDefinition;
+@inject IEthereumHostProvider _ethereuHostProvider;
+
+<div class="card">
+    <h5 class="card-header">Transfer ERC0 Token</h5>
+    <div class="card-body">
+        <EditForm Model="transferModel" OnValidSubmit="@TransferAsync">
+            <FluentValidator></FluentValidator>
+            <div class="form-group row">
+                <label for="" class="col-sm-1 col-form-label">Contract Address:</label>
+                <div class="col-sm-10">
+                    <InputText id="TokenContractAddress" class="form-control" @bind-Value="transferModel.ERC20Contract.Address" type="text" />
+                    <small id="TokenContractAddressHelp" class="form-text text-muted">The ERC20 contract address</small>
+                    <ValidationMessage For="() => transferModel.ERC20Contract.Address"></ValidationMessage>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="" class="col-sm-1 col-form-label">Decimal Places:</label>
+                <div class="col-sm-10">
+                    <input id="TokenDecimalPlaces" class="form-control" @bind="transferModel.ERC20Contract.DecimalPlaces" type="text" />
+                    <small id="TokenDecimalPlacesHelp" class="form-text text-muted">The number of decimal places of ERC20 Token</small>
+                    <ValidationMessage For="() => transferModel.ERC20Contract.DecimalPlaces"></ValidationMessage>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="toAccount" class="col-sm-1 col-form-label">To Account:</label>
+                <div class="col-sm-10">
+                    <InputText id="toAccount" class="form-control" @bind-Value="transferModel.To" type="text" />
+                    <small id="toAccountHelp" class="form-text text-muted">The account address to transfer the token to</small>
+                    <ValidationMessage For="() => transferModel.To"></ValidationMessage>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="etherAmount" class="col-sm-1 col-form-label">Token Amount:</label>
+                <div class="col-sm-10">
+                    <input id="tokenAmount" class="form-control" @bind="transferModel.Value" type="text" />
+                    <small id="tokenAmountHelp" class="form-text text-muted">The token amount to transfer</small>
+                    <ValidationMessage For="() => transferModel.Value"></ValidationMessage>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <ValidationSummary></ValidationSummary>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">
+                    Submit
+                </button>
+            </div>
+        </EditForm>
+        @if (TransactionHash != null)
+        {
+            <div>Transaction Hash= @TransactionHash</div>
+        }
+
+        @if (ErrorTransferMessage != null)
+        {
+            <div>An error has occurred= @ErrorTransferMessage</div>
+        }
+    </div>
+</div>
+
+@code {
+
+    ERC20TransferModel transferModel = new ERC20TransferModel();
+    string TransactionHash { get; set; }
+    string ErrorTransferMessage { get; set; }
+
+    public async Task TransferAsync()
+    {
+        try
+        {
+            TransactionHash = null;
+
+            var functionTransfer = transferModel.GetTransferFunction();
+            await _ethereuHostProvider.EnableProviderAsync();
+            var web3 = await _ethereuHostProvider.GetWeb3Async();
+            var contractHandler = web3.Eth.GetContractTransactionHandler<TransferFunction>();
+            TransactionHash = await contractHandler.SendRequestAsync(transferModel.ERC20Contract.Address, functionTransfer);
+            this.StateHasChanged();
+        }
+        catch(Exception ex)
+        {
+            ErrorTransferMessage = ex.Message;
+            this.StateHasChanged();
+        }
+    }
+
+}
+

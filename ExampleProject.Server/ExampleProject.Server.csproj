@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="9.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nethereum.Erc20.Blazor\Nethereum.Erc20.Blazor.csproj" />
     <ProjectReference Include="..\Nethereum.Metamask.Blazor\Nethereum.Metamask.Blazor.csproj" />
   </ItemGroup>
 

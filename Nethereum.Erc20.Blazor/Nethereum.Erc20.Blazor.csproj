@@ -20,4 +20,8 @@
     <ProjectReference Include="..\Nethereum.UI\Nethereum.UI.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

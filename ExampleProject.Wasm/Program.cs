@@ -8,8 +8,11 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Nethereum.Metamask.Blazor;
+using Nethereum.Metamask;
+using FluentValidation;
 
-namespace Nethereum.Metamask.Blazor.Wasm
+namespace ExampleProject.Wasm
 {
     public class Program
     {
@@ -24,6 +27,7 @@ namespace Nethereum.Metamask.Blazor.Wasm
             builder.Services.AddSingleton<MetamaskHostProvider>();
             builder.Services.AddSingleton<IEthereumHostProvider, MetamaskHostProvider>();
             builder.Services.AddSingleton<NethereumAuthenticator>();
+            builder.Services.AddValidatorsFromAssemblyContaining<Nethereum.Erc20.Blazor.Erc20Transfer>();
 
             await builder.Build().RunAsync();
         }

@@ -1,0 +1,59 @@
+﻿@page "/"
+@using Nethereum.UI;
+@using Nethereum.Metamask;
+@using Nethereum.Erc20.Blazor;
+@inject IJSRuntime jsRuntime;
+@inject MetamaskHostProvider _metamaskHostProvider;
+@inject NethereumAuthenticator  _nethereumAuthenticator;
+@using Nethereum.Web3;
+@using Nethereum.Hex.HexTypes;
+<br />
+Selected Account: @SelectedAccount
+<br />
+<button @onclick="@GetBlockHashAsync">Get BlockHash</button>
+<br />
+@BlockHash
+<br />
+<button @onclick="@AuthenticateAsync">Authenticate</button>
+<br />
+@AuthenticatedAccount
+<br />
+
+<Erc20Transfer></Erc20Transfer> 
+
+
+@code{
+    bool MetamaskAvailable { get; set; }
+    string SelectedAccount { get; set; }
+    string BlockHash { get; set; }
+
+    protected string AuthenticatedAccount { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstTime)
+    {
+        if (firstTime)
+        {
+            _metamaskHostProvider.SelectedAccountChanged +=MetamaskHostProvider_SelectedAccountChanged;
+            MetamaskAvailable=await _metamaskHostProvider.CheckProviderAvailabilityAsync();
+        }
+    }
+
+    private async Task MetamaskHostProvider_SelectedAccountChanged(string account)
+    {
+        SelectedAccount=account;
+        this.StateHasChanged();
+    }
+               
+    protected async Task GetBlockHashAsync()
+    {
+        var web3=await _metamaskHostProvider.GetWeb3Async();
+        var block=await web3.Eth.Blocks.GetBlockWithTransactionsByNumber.SendRequestAsync(new HexBigInteger(1));
+        BlockHash=block.BlockHash;
+    }
+
+    public async Task AuthenticateAsync()
+    {
+        AuthenticatedAccount=await _nethereumAuthenticator.RequestNewChallengeSignatureAndRecoverAccountAsync();
+    }
+ }
+
