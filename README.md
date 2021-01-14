@@ -1,6 +1,8 @@
 # Nethereum.Metamask.Blazor
 Metamask + Nethereum + Blazor interop
 ![Metamask](screenshots/quickdemo.gif "Metamask Blazor Netehreum")
+Template
+![Metamask](screenshots/demoErc20.gif "Metamask Blazor Netehreum")
 
 ```csharp
 @page "/"
