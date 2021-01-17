@@ -30,6 +30,10 @@ namespace ExampleProject.Server
             services.AddScoped<IMetamaskInterop, MetamaskBlazorInterop>();
             services.AddScoped<MetamaskInterceptor>();
             services.AddScoped<MetamaskHostProvider>();
+            services.AddScoped<IEthereumHostProvider>(serviceProvider => 
+            {
+                return serviceProvider.GetService<MetamaskHostProvider>();
+            });
             services.AddScoped<IEthereumHostProvider, MetamaskHostProvider>();
             services.AddScoped<NethereumAuthenticator>();
             services.AddValidatorsFromAssemblyContaining<Nethereum.Erc20.Blazor.Erc20Transfer>();

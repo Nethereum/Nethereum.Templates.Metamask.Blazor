@@ -30,7 +30,7 @@ namespace Nethereum.UI
 
         public async Task<string> RequestNewChallengeSignatureAndRecoverAccountAsync(string message = null)
         {
-            if (_host.Available)
+            if (!_host.Available)
             {
                 throw new Exception("Cannot authenticate user, an Ethereum host is not available");
             }

@@ -25,7 +25,10 @@ namespace ExampleProject.Wasm
             builder.Services.AddSingleton<IMetamaskInterop, MetamaskBlazorInterop>();
             builder.Services.AddSingleton<MetamaskInterceptor>();
             builder.Services.AddSingleton<MetamaskHostProvider>();
-            builder.Services.AddSingleton<IEthereumHostProvider, MetamaskHostProvider>();
+            builder.Services.AddSingleton<IEthereumHostProvider>(serviceProvider =>
+            {
+                return serviceProvider.GetService<MetamaskHostProvider>();
+            });
             builder.Services.AddSingleton<NethereumAuthenticator>();
             builder.Services.AddValidatorsFromAssemblyContaining<Nethereum.Erc20.Blazor.Erc20Transfer>();
 

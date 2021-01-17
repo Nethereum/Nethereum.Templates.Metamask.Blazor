@@ -78,7 +78,6 @@
             TransactionHash = null;
 
             var functionTransfer = transferModel.GetTransferFunction();
-            await _ethereuHostProvider.EnableProviderAsync();
             var web3 = await _ethereuHostProvider.GetWeb3Async();
             var contractHandler = web3.Eth.GetContractTransactionHandler<TransferFunction>();
             TransactionHash = await contractHandler.SendRequestAsync(transferModel.ERC20Contract.Address, functionTransfer);
