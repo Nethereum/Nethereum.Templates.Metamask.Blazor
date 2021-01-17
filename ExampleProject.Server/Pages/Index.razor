@@ -7,53 +7,89 @@
 @inject NethereumAuthenticator  _nethereumAuthenticator;
 @using Nethereum.Web3;
 @using Nethereum.Hex.HexTypes;
-<br />
-Selected Account: @SelectedAccount
-<br />
-<button @onclick="@GetBlockHashAsync">Get BlockHash</button>
-<br />
-@BlockHash
-<br />
-<button @onclick="@AuthenticateAsync">Authenticate</button>
-<br />
-@AuthenticatedAccount
-<br />
 
-<Erc20Transfer></Erc20Transfer> 
+@if (MetamaskAvailable == true && !string.IsNullOrEmpty(SelectedAccount))
+{
+<div class="card m-1">
+    <div class="card-body">
+        <div class="row">
+            <label class="col-sm-3 col-form-label-lg">Selected Account:</label>
+            <div class="col-sm-6">
+                @SelectedAccount
+                <small id="selectedAccountHelp" class="form-text text-muted">The selected account is bound to the host (ie Metamask) on change</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card m-1">
+    <div class="card-body">
+        <div class="row">
+            <label class="col-sm-3 col-form-label-lg">Block hash of block number 0:</label>
+            <div class="col-sm-6">
+                <button @onclick="@GetBlockHashAsync">Get BlockHash</button>
+                <div>@BlockHash</div>
+                <small id="selectedAccountHelp" class="form-text text-muted">With Metamask calls are redirected to its configured node (i.e http://localhost:8545)</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card m-1">
+    <div class="card-body">
+        <div class="row">
+            <label class="col-sm-3 col-form-label-lg">Authentication by signing:</label>
+            <div class="col-sm-6">
+                <button @onclick="@AuthenticateAsync">Authenticate</button>
+                <div>@AuthenticatedAccount</div>
+                <small id="selectedAccountHelp" class="form-text text-muted">Creating an unique challenge per authentication request, allows us to recover and validate what account has signed the message</small>
+            </div>
+        </div>
+    </div>
+</div>
 
 
-@code{
-    bool MetamaskAvailable { get; set; }
-    string SelectedAccount { get; set; }
-    string BlockHash { get; set; }
+<Erc20Transfer></Erc20Transfer>
+} else
+{
+<div>
+    Please connect to Ethereum !
+</div>
+}
 
-    protected string AuthenticatedAccount { get; set; }
+
+    @code{
+        bool MetamaskAvailable { get; set; }
+        string SelectedAccount { get; set; }
+        string BlockHash { get; set; }
+
+protected string AuthenticatedAccount { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstTime)
     {
         if (firstTime)
         {
-            _metamaskHostProvider.SelectedAccountChanged +=MetamaskHostProvider_SelectedAccountChanged;
-            MetamaskAvailable=await _metamaskHostProvider.CheckProviderAvailabilityAsync();
+            _metamaskHostProvider.SelectedAccountChanged += MetamaskHostProvider_SelectedAccountChanged;
+            MetamaskAvailable = await _metamaskHostProvider.CheckProviderAvailabilityAsync();
         }
     }
 
     private async Task MetamaskHostProvider_SelectedAccountChanged(string account)
     {
-        SelectedAccount=account;
+        SelectedAccount = account;
         this.StateHasChanged();
     }
-               
+
     protected async Task GetBlockHashAsync()
     {
-        var web3=await _metamaskHostProvider.GetWeb3Async();
-        var block=await web3.Eth.Blocks.GetBlockWithTransactionsByNumber.SendRequestAsync(new HexBigInteger(1));
-        BlockHash=block.BlockHash;
+        var web3 = await _metamaskHostProvider.GetWeb3Async();
+        var block = await web3.Eth.Blocks.GetBlockWithTransactionsByNumber.SendRequestAsync(new HexBigInteger(1));
+        BlockHash = block.BlockHash;
     }
 
     public async Task AuthenticateAsync()
     {
-        AuthenticatedAccount=await _nethereumAuthenticator.RequestNewChallengeSignatureAndRecoverAccountAsync();
+        AuthenticatedAccount = await _nethereumAuthenticator.RequestNewChallengeSignatureAndRecoverAccountAsync();
     }
- }
+    }
 

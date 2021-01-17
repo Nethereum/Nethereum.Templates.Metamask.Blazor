@@ -5,19 +5,56 @@
 @using Nethereum.Web3;
 @using Nethereum.Hex.HexTypes;
 @using Nethereum.Erc20.Blazor;
-<br />
-Selected Account: @SelectedAccount
-<br />
-<button @onclick="@GetBlockHashAsync">Get BlockHash</button>
-<br />
-@BlockHash
-<br />
-<button @onclick="@AuthenticateAsync">Authenticate</button>
-<br />
-@AuthenticatedAccount
-<br />
 
-<Erc20Transfer></Erc20Transfer>
+@if (MetamaskAvailable == true && !string.IsNullOrEmpty(SelectedAccount))
+{
+    <div class="card m-1">
+        <div class="card-body">
+            <div class="row">
+                <label class="col-sm-3 col-form-label-lg">Selected Account:</label>
+                <div class="col-sm-6">
+                    @SelectedAccount
+                    <small id="selectedAccountHelp" class="form-text text-muted">The selected account is bound to the host (ie Metamask) on change</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card m-1">
+        <div class="card-body">
+            <div class="row">
+                <label class="col-sm-3 col-form-label-lg">Block hash of block number 0:</label>
+                <div class="col-sm-6">
+                    <button @onclick="@GetBlockHashAsync">Get BlockHash</button>
+                    <div>@BlockHash</div>
+                    <small id="selectedAccountHelp" class="form-text text-muted">With Metamask calls are redirected to its configured node (i.e http://localhost:8545)</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card m-1">
+        <div class="card-body">
+            <div class="row">
+                <label class="col-sm-3 col-form-label-lg">Authentication by signing:</label>
+                <div class="col-sm-6">
+                    <button @onclick="@AuthenticateAsync">Authenticate</button>
+                    <div>@AuthenticatedAccount</div>
+                    <small id="selectedAccountHelp" class="form-text text-muted">Creating an unique challenge per authentication request, allows us to recover and validate what account has signed the message</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <Erc20Transfer></Erc20Transfer>
+}
+else
+{
+    <div>
+        Please connect to Ethereum !
+    </div>
+}
 
 @code{
 
