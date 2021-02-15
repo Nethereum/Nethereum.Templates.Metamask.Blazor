@@ -24,11 +24,39 @@
         return ethereum.selectedAddress;
     },
 
+    Request: async (message) => {
+        try {
+            
+            let parsedMessage = JSON.parse(message);
+            console.log(parsedMessage);
+            const response = await ethereum.request(parsedMessage);
+            let rpcResonse = {
+                jsonrpc: "2.0",
+                result: response,
+                id: parsedMessage.id,
+                error: null
+            }
+            console.log(rpcResonse);
+
+            return JSON.stringify(rpcResonse);
+        } catch (e) {
+            let rpcResonseError = {
+                jsonrpc: "2.0",
+                id: parsedMessage.id,
+                error: {
+                    message: e,
+                }
+            }
+            return JSON.stringify(rpcResonseError);
+        }
+    },
+
     Send: async (message) => {
         return new Promise(function (resolve, reject) {
             console.log(JSON.parse(message));
             ethereum.send(JSON.parse(message), function (error, result) {
                 console.log(result);
+                console.log(error);
                 resolve(JSON.stringify(result));
             });
         });

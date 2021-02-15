@@ -28,13 +28,13 @@ namespace Nethereum.Metamask.Blazor
 
         public async ValueTask<RpcResponseMessage> SendAsync(RpcRequestMessage rpcRequestMessage)
         {
-            var response = await _jsRuntime.InvokeAsync<string>("NethereumMetamaskInterop.Send", JsonConvert.SerializeObject(rpcRequestMessage));
+            var response = await _jsRuntime.InvokeAsync<string>("NethereumMetamaskInterop.Request", JsonConvert.SerializeObject(rpcRequestMessage));
             return JsonConvert.DeserializeObject<RpcResponseMessage>(response);
         }
 
         public async ValueTask<RpcResponseMessage> SendTransactionAsync(MetamaskRpcRequestMessage rpcRequestMessage)
         {
-            var response = await _jsRuntime.InvokeAsync<string>("NethereumMetamaskInterop.Send", JsonConvert.SerializeObject(rpcRequestMessage));
+            var response = await _jsRuntime.InvokeAsync<string>("NethereumMetamaskInterop.Request", JsonConvert.SerializeObject(rpcRequestMessage));
             return JsonConvert.DeserializeObject<RpcResponseMessage>(response);
         }
 
