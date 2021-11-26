@@ -42,10 +42,7 @@
         } catch (e) {
             let rpcResonseError = {
                 jsonrpc: "2.0",
-                id: parsedMessage.id,
-                error: {
-                    message: e,
-                }
+                error: e
             }
             return JSON.stringify(rpcResonseError);
         }
