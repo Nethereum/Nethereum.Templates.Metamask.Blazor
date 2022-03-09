@@ -10,7 +10,8 @@ Both project types include and exapmle on how to:
 
 ### Demo
 ![Metamask](screenshots/quickdemo.gif "Metamask Blazor Netehreum")
-### Template installation
+### Template usage
+Download the project (until released as a dotnet new template) 
 ![Metamask](screenshots/demoErc20.gif "Metamask Blazor Netehreum")
 
 ### Example code
