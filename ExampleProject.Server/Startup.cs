@@ -35,7 +35,7 @@ namespace ExampleProject.Server
                 return serviceProvider.GetService<MetamaskHostProvider>();
             });
             services.AddScoped<IEthereumHostProvider, MetamaskHostProvider>();
-            services.AddScoped<NethereumAuthenticator>();
+            services.AddScoped<NethereumSiweAuthenticatorService>();
             services.AddValidatorsFromAssemblyContaining<Nethereum.Erc20.Blazor.Erc20Transfer>();
         }
 

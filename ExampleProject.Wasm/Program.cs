@@ -29,7 +29,7 @@ namespace ExampleProject.Wasm
             {
                 return serviceProvider.GetService<MetamaskHostProvider>();
             });
-            builder.Services.AddSingleton<NethereumAuthenticator>();
+            builder.Services.AddSingleton<NethereumSiweAuthenticatorService>();
             builder.Services.AddValidatorsFromAssemblyContaining<Nethereum.Erc20.Blazor.Erc20Transfer>();
 
             await builder.Build().RunAsync();

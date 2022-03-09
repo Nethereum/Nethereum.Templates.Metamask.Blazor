@@ -1,6 +1,6 @@
 ﻿@using Nethereum.UI
 @inject IEthereumHostProvider _metamaskHostProvider;
-@inject NethereumAuthenticator  _nethereumAuthenticator;
+@inject NethereumSiweAuthenticatorService  _nethereumSiweAuthenticatorService;
 
 <div>
     @if (MetamaskAvailable && !string.IsNullOrEmpty(SelectedAccount))
@@ -48,8 +48,5 @@
         SelectedAccount = await _metamaskHostProvider.EnableProviderAsync();
     }
 
-    public async Task AuthenticateAsync()
-    {
-        AuthenticatedAccount = await _nethereumAuthenticator.RequestNewChallengeSignatureAndRecoverAccountAsync();
-    }
+   
 }
