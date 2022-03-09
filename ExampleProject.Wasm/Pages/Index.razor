@@ -2,78 +2,119 @@
 @using Nethereum.Erc20.Blazor;
 @inject IJSRuntime jsRuntime;
 @inject IEthereumHostProvider _ethereumHostProvider;
-@inject NethereumAuthenticator  _nethereumAuthenticator;
+@inject NethereumSiweAuthenticatorService  _nethereumSiweAuthenticatorService;
+@inject NavigationManager _navigationManager
 @using Nethereum.Hex.HexTypes;
+@using Nethereum.Siwe.Core
 
 @if (EthereumAvailable == true && !string.IsNullOrEmpty(SelectedAccount))
 {
-    <div class="card m-1">
-        <div class="card-body">
-            <div class="row">
-                <label class="col-sm-3 col-form-label-lg">Selected Account:</label>
-                <div class="col-sm-6">
-                    @SelectedAccount
-                    <small id="selectedAccountHelp" class="form-text text-muted">The selected account is bound to the host (ie Metamask) on change</small>
-                </div>
+<div class="card m-1">
+    <div class="card-body">
+        <div class="row">
+            <label class="col-sm-3 col-form-label-lg">Selected Account:</label>
+            <div class="col-sm-6">
+                @SelectedAccount
+                <small id="selectedAccountHelp" class="form-text text-muted">The selected account is bound to the host (ie Metamask) on change</small>
             </div>
         </div>
     </div>
-
-    <div class="card m-1">
-        <div class="card-body">
-            <div class="row">
-                <label class="col-sm-3 col-form-label-lg">Block hash of block number 0:</label>
-                <div class="col-sm-6">
-                    <button @onclick="@GetBlockHashAsync">Get BlockHash</button>
-                    <div>@BlockHash</div>
-                    <small id="selectedAccountHelp" class="form-text text-muted">With Metamask calls are redirected to its configured node (i.e http://localhost:8545)</small>
-                </div>
+    <div class="card-body">
+        <div class="row">
+            <label class="col-sm-3 col-form-label-lg">Selected Network ChainId:</label>
+            <div class="col-sm-6">
+                @SelectedChainId
+                <small id="selectedAccountHelp" class="form-text text-muted">The selected chain Id</small>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="card m-1">
-        <div class="card-body">
-            <div class="row">
-                <label class="col-sm-3 col-form-label-lg">Authentication by signing:</label>
-                <div class="col-sm-6">
-                    <button @onclick="@AuthenticateAsync">Authenticate</button>
-                    <div>@AuthenticatedAccount</div>
-                    <small id="selectedAccountHelp" class="form-text text-muted">Creating an unique challenge per authentication request, allows us to recover and validate what account has signed the message</small>
-                </div>
+<div class="card m-1">
+    <div class="card-body">
+        <div class="row">
+            <label class="col-sm-3 col-form-label-lg">Block hash of block number 0:</label>
+            <div class="col-sm-6">
+                <button @onclick="@GetBlockHashAsync">Get BlockHash</button>
+                <div>@BlockHash</div>
+                <small id="selectedAccountHelp" class="form-text text-muted">With Metamask calls are redirected to its configured node (i.e http://localhost:8545)</small>
             </div>
         </div>
     </div>
+</div>
+
+<div class="card m-1">
+    <div class="card-body">
+        <div class="row">
+            <label class="col-sm-3 col-form-label-lg">Authentication by signing:</label>
+            <div class="col-sm-6">
+                <button @onclick="@AuthenticateAsync">Authenticate</button>
+                <div>@AuthenticatedAccount</div>
+                <small id="selectedAccountHelp" class="form-text text-muted">Creating an unique challenge per authentication request, allows us to recover and validate what account has signed the message</small>
+                @if (ErrorAuthenticateMessage != null)
+                {
+                    <div class="alert-danger">An error has occurred= @ErrorAuthenticateMessage</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
 
 
-    <Erc20Transfer></Erc20Transfer>
-}
-else
+<Erc20Transfer></Erc20Transfer>
+} else
 {
-    <div>
-        Please connect to Ethereum !
-    </div>
-
+<div>
+    Please connect to Ethereum !
+</div>
 }
+
     @code{
 
         bool EthereumAvailable { get; set; }
         string SelectedAccount { get; set; }
+        int SelectedChainId { get; set; }
         string BlockHash { get; set; }
         string TransactionHash { get; set; }
         string ErrorTransferMessage { get; set; }
+        string ErrorAuthenticateMessage { get; set; }
         protected string AuthenticatedAccount { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
             _ethereumHostProvider.SelectedAccountChanged += HostProvider_SelectedAccountChanged;
+            _ethereumHostProvider.NetworkChanged += HostProvider_NetworkChanged;
+            _ethereumHostProvider.EnabledChanged += HostProviderOnEnabledChanged;
             EthereumAvailable = await _ethereumHostProvider.CheckProviderAvailabilityAsync();
         }
 
 
+        private async Task HostProviderOnEnabledChanged(bool enabled)
+        {
+            if (enabled)
+            {
+                await GetChainId();
+                this.StateHasChanged();
+            }
+        }
+
+        private async Task GetChainId()
+        {
+            var web3 = await _ethereumHostProvider.GetWeb3Async();
+            var chainId = await web3.Eth.ChainId.SendRequestAsync();
+            SelectedChainId = (int) chainId.Value;
+        }
+
         private async Task HostProvider_SelectedAccountChanged(string account)
         {
             SelectedAccount = account;
+            await GetChainId();
+            this.StateHasChanged();
+        }
+
+        private async Task HostProvider_NetworkChanged(int chainId)
+        {
+            SelectedChainId = chainId;
             this.StateHasChanged();
         }
 
@@ -102,7 +143,25 @@ else
         public async Task AuthenticateAsync()
         {
 
-            AuthenticatedAccount = await _nethereumAuthenticator.RequestNewChallengeSignatureAndRecoverAccountAsync();
+            try
+            {
+                ErrorAuthenticateMessage = null;
+                var siweMessage = await _nethereumSiweAuthenticatorService.RequestUserToSignAuthenticationMessageAsync(new SiweMessage()
+                {
+                    Address = SelectedAccount,
+                    ChainId = SelectedChainId.ToString(),
+                    Uri = _navigationManager.ToAbsoluteUri("").ToString(),
+                    Domain = _navigationManager.ToAbsoluteUri("").Host,
+                    Statement = "Please sign in to authenticate to ExampleProject",
+
+                });
+
+                AuthenticatedAccount = siweMessage.Address;
+            }
+            catch (Exception ex)
+            {
+                ErrorAuthenticateMessage = ex.Message;
+            }
 
         }
     }
