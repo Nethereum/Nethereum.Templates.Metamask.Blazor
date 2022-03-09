@@ -12,7 +12,7 @@ namespace Nethereum.Metamask
         public string Name { get; } = "Metamask";
         public bool Available { get; private set; }
         public string SelectedAccount { get; private set; }
-        public int SelectedNetwork { get; }
+        public int SelectedNetworkChainId { get; private set; }
         public bool Enabled { get; private set; }
 
         private MetamaskInterceptor _metamaskInterceptor;
@@ -28,7 +28,6 @@ namespace Nethereum.Metamask
             return result;
         }
 
-       
 
         public Task<Web3.Web3> GetWeb3Async()
         {
@@ -43,6 +42,7 @@ namespace Nethereum.Metamask
 
             if (Enabled)
             {
+                await ChangeMetamaskEnabledAsync(true);
                 SelectedAccount = selectedAccount;
                 if (SelectedAccountChanged != null)
                 {
@@ -59,11 +59,6 @@ namespace Nethereum.Metamask
             var result = await _metamaskInterop.GetSelectedAddress();
             await ChangeSelectedAccountAsync(result);
             return result;
-        }
-
-        public Task<int> GetProviderSelectedNetworkAsync()
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<string> SignMessageAsync(string message)
@@ -90,12 +85,39 @@ namespace Nethereum.Metamask
             }
         }
 
+        public async Task ChangeSelectedNetworkAsync(int chainId)
+        {
+            if (SelectedNetworkChainId != chainId)
+            {
+                SelectedNetworkChainId = chainId;
+                if (NetworkChanged != null)
+                {
+                    await NetworkChanged.Invoke(SelectedNetworkChainId);
+                }
+            }
+        }
+
         public async Task ChangeMetamaskAvailableAsync(bool available)
         {
-            Available = available;
-            if (AvailabilityChanged != null)
+            if (Available != available)
             {
-                await AvailabilityChanged.Invoke(available);
+                Available = available;
+                if (AvailabilityChanged != null)
+                {
+                    await AvailabilityChanged.Invoke(available);
+                }
+            }
+        }
+
+        public async Task ChangeMetamaskEnabledAsync(bool enabled)
+        {
+            if (Enabled != enabled)
+            {
+                Enabled = enabled;
+                if (EnabledChanged != null)
+                {
+                    await EnabledChanged.Invoke(enabled);
+                }
             }
         }
 

@@ -9,7 +9,7 @@ namespace Nethereum.UI
 
         bool Available { get; }
         string SelectedAccount { get;}
-        int SelectedNetwork { get; }
+        int SelectedNetworkChainId { get; }
         bool Enabled { get; }
         
         event Func<string, Task> SelectedAccountChanged;
@@ -21,7 +21,6 @@ namespace Nethereum.UI
         Task<Web3.Web3> GetWeb3Async();
         Task<string> EnableProviderAsync();
         Task<string> GetProviderSelectedAccountAsync();
-        Task<int> GetProviderSelectedNetworkAsync();
         Task<string> SignMessageAsync(string message);
     }
 }

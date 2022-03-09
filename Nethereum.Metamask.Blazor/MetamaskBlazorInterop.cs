@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
+using Nethereum.JsonRpc.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
 
@@ -40,13 +41,15 @@ namespace Nethereum.Metamask.Blazor
 
         public async ValueTask<string> SignAsync(string utf8Hex)
         {
-            var result = await  _jsRuntime.InvokeAsync<string>("NethereumMetamaskInterop.Sign", utf8Hex);
-            return result.Trim('"');
+            var rpcJsonResponse = await  _jsRuntime.InvokeAsync<string>("NethereumMetamaskInterop.Sign", utf8Hex);
+            return ConvertResponse<string>(rpcJsonResponse);
         }
 
         public async ValueTask<string> GetSelectedAddress()
         {
-            return await _jsRuntime.InvokeAsync<string>("NethereumMetamaskInterop.GetSelectedAddress");
+            var rpcJsonResponse = await _jsRuntime.InvokeAsync<string>("NethereumMetamaskInterop.GetAddresses");
+            var accounts = ConvertResponse<string[]>(rpcJsonResponse);
+            return accounts[0];
         }
 
 
@@ -60,6 +63,39 @@ namespace Nethereum.Metamask.Blazor
         public static async Task SelectedAccountChanged(string selectedAccount)
         {
             await MetamaskHostProvider.Current.ChangeSelectedAccountAsync(selectedAccount);
+        }
+
+        [JSInvokable()]
+        public static async Task SelectedNetworkChanged(int chainId)
+        {
+            await MetamaskHostProvider.Current.ChangeSelectedNetworkAsync(chainId);
+        }
+
+        private T ConvertResponse<T>(string jsonResponseMessage)
+        {
+            var responseMessage = JsonConvert.DeserializeObject<RpcResponseMessage>(jsonResponseMessage);
+            return ConvertResponse<T>(responseMessage);
+        }
+
+        private void HandleRpcError(RpcResponseMessage response)
+        {
+            if (response.HasError)
+                throw new RpcResponseException(new JsonRpc.Client.RpcError(response.Error.Code, response.Error.Message,
+                    response.Error.Data));
+        }
+
+        private T ConvertResponse<T>(RpcResponseMessage response,
+            string route = null)
+        {
+            HandleRpcError(response);
+            try
+            {
+                return response.GetResult<T>();
+            }
+            catch (FormatException formatException)
+            {
+                throw new RpcResponseFormatException("Invalid format found in RPC response", formatException);
+            }
         }
     }
 }
