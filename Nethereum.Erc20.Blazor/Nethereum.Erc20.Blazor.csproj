@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,10 +10,10 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="9.3.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.2" />
 	  <PackageReference Include="Accelist.FluentValidation.Blazor" Version="4.0.0" />
-	  <PackageReference Include="Nethereum.StandardTokenEIP20" Version="3.8.0" />
-	<PackageReference Include="Nethereum.Web3" Version="3.8.0" />
+	  <PackageReference Include="Nethereum.StandardTokenEIP20" Version="4.2.0" />
+	<PackageReference Include="Nethereum.Web3" Version="4.2.0" />
   </ItemGroup>
 
   <ItemGroup>
