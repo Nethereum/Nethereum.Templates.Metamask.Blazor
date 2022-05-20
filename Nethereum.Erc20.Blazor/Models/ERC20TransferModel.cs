@@ -1,4 +1,4 @@
-﻿using Nethereum.StandardTokenEIP20.ContractDefinition;
+﻿using Nethereum.Contracts.Standards.ERC20.ContractDefinition;
 using Nethereum.UI;
 
 namespace Nethereum.Erc20.Blazor

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -6,8 +6,9 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="9.3.0" />
-    <PackageReference Include="Nethereum.Siwe.Core" Version="4.2.0" />
-    <PackageReference Include="Nethereum.Web3" Version="4.2.0" />
+    <PackageReference Include="Nethereum.Siwe" Version="4.5.0" />
+    <PackageReference Include="Nethereum.Siwe.Core" Version="4.5.0" />
+    <PackageReference Include="Nethereum.Web3" Version="4.5.0" />
   </ItemGroup>
 
 </Project>

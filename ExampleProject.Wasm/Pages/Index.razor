@@ -4,10 +4,14 @@
 @inject IEthereumHostProvider _ethereumHostProvider;
 @inject NethereumSiweAuthenticatorService  _nethereumSiweAuthenticatorService;
 @inject NavigationManager _navigationManager
+@inject AuthenticationStateProvider _siweAuthenticationStateProvider;
 @using Nethereum.Hex.HexTypes;
 @using Nethereum.Siwe.Core
+@using ExampleProject.Wasm.Authentication
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
 
-@if (EthereumAvailable == true && !string.IsNullOrEmpty(SelectedAccount))
+@if (EthereumAvailable == true && SelectedAccount != null)
 {
 <div class="card m-1">
     <div class="card-body">
@@ -51,6 +55,12 @@
                 <button @onclick="@AuthenticateAsync">Authenticate</button>
                 <div>@AuthenticatedAccount</div>
                 <small id="selectedAccountHelp" class="form-text text-muted">Creating an unique challenge per authentication request, allows us to recover and validate what account has signed the message</small>
+                <AuthorizeView>
+                    <Authorized>
+                        <div>Welcome: @UserName</div>
+                    </Authorized>
+                </AuthorizeView>
+
                 @if (ErrorAuthenticateMessage != null)
                 {
                     <div class="alert-danger">An error has occurred= @ErrorAuthenticateMessage</div>
@@ -71,6 +81,9 @@
 
     @code{
 
+        [CascadingParameter]
+        public Task<AuthenticationState> AuthenticationState { get; set; }
+
         bool EthereumAvailable { get; set; }
         string SelectedAccount { get; set; }
         int SelectedChainId { get; set; }
@@ -78,6 +91,7 @@
         string TransactionHash { get; set; }
         string ErrorTransferMessage { get; set; }
         string ErrorAuthenticateMessage { get; set; }
+        string UserName { get; set; }
         protected string AuthenticatedAccount { get; set; }
 
         protected override async Task OnInitializedAsync()
@@ -86,6 +100,13 @@
             _ethereumHostProvider.NetworkChanged += HostProvider_NetworkChanged;
             _ethereumHostProvider.EnabledChanged += HostProviderOnEnabledChanged;
             EthereumAvailable = await _ethereumHostProvider.CheckProviderAvailabilityAsync();
+            SelectedAccount = _ethereumHostProvider.SelectedAccount;
+
+            var authState = await AuthenticationState;;
+            if (authState != null)
+            {
+                UserName = authState.User.FindFirst(c => c.Type.Contains(ClaimTypes.NameIdentifier))?.Value;
+            }
         }
 
 
@@ -142,26 +163,29 @@
 
         public async Task AuthenticateAsync()
         {
+            await ((SiweAuthenticationStateProvider)_siweAuthenticationStateProvider).Authenticate(SelectedAccount);
+            var authState = await AuthenticationState;;
+            UserName = authState.User.FindFirst(c => c.Type.Contains(ClaimTypes.NameIdentifier))?.Value;
 
-            try
-            {
-                ErrorAuthenticateMessage = null;
-                var siweMessage = await _nethereumSiweAuthenticatorService.RequestUserToSignAuthenticationMessageAsync(new SiweMessage()
-                {
-                    Address = SelectedAccount,
-                    ChainId = SelectedChainId.ToString(),
-                    Uri = _navigationManager.ToAbsoluteUri("").ToString(),
-                    Domain = _navigationManager.ToAbsoluteUri("").Host,
-                    Statement = "Please sign in to authenticate to ExampleProject",
+        //try
+        //{
+        //    ErrorAuthenticateMessage = null;
+        //    var siweMessage = await _nethereumSiweAuthenticatorService.RequestUserToSignAuthenticationMessageAsync(new SiweMessage()
+        //    {
+        //        Address = SelectedAccount,
+        //        ChainId = SelectedChainId.ToString(),
+        //        Uri = _navigationManager.ToAbsoluteUri("").ToString(),
+        //        Domain = _navigationManager.ToAbsoluteUri("").Host,
+        //        Statement = "Please sign in to authenticate to ExampleProject",
 
-                });
+        //    });
 
-                AuthenticatedAccount = siweMessage.Address;
-            }
-            catch (Exception ex)
-            {
-                ErrorAuthenticateMessage = ex.Message;
-            }
+        //    AuthenticatedAccount = siweMessage.Address;
+        //}
+        //catch (Exception ex)
+        //{
+        //    ErrorAuthenticateMessage = ex.Message;
+        //}
 
         }
     }
