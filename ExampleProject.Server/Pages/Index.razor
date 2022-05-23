@@ -9,6 +9,7 @@
 @using Nethereum.Web3;
 @using Nethereum.Hex.HexTypes;
 @using Nethereum.Siwe.Core
+@using Nethereum.Util
 
 @if (EthereumAvailable == true && !string.IsNullOrEmpty(SelectedAccount))
 {
@@ -139,7 +140,7 @@
                 ErrorAuthenticateMessage = null;
                 var siweMessage = await _nethereumSiweAuthenticatorService.RequestUserToSignAuthenticationMessageAsync(new SiweMessage()
                 {
-                    Address = SelectedAccount,
+                    Address = SelectedAccount.ConvertToEthereumChecksumAddress(),
                     ChainId = SelectedChainId.ToString(),
                     Uri = _navigationManager.ToAbsoluteUri(@"").ToString(),
                     Domain = _navigationManager.ToAbsoluteUri(@"/").Host,

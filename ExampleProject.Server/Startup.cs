@@ -9,6 +9,8 @@ using Nethereum.Metamask.Blazor;
 using Nethereum.UI;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.Authorization;
+using Nethereum.Siwe;
 
 namespace ExampleProject.Server
 {
@@ -37,7 +39,11 @@ namespace ExampleProject.Server
                 return serviceProvider.GetService<MetamaskHostProvider>();
             });
             services.AddScoped<IEthereumHostProvider, MetamaskHostProvider>();
+            var inMemorySessionNonceStorage = new InMemorySessionNonceStorage();
+            services.AddScoped<ISessionStorage>(x => inMemorySessionNonceStorage);
             services.AddScoped<NethereumSiweAuthenticatorService>();
+
+
             services.AddValidatorsFromAssemblyContaining<Nethereum.Erc20.Blazor.Erc20Transfer>();
             services.AddSingleton<EthereumAuthenticationService>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
