@@ -2,7 +2,7 @@
 
 async function metamaskRequest(parsedMessage) {
     try {
-        console.log(parsedMessage);
+        log(parsedMessage);
         const response = await ethereum.request(parsedMessage);
         let rpcResponse = {
             jsonrpc: "2.0",
@@ -88,7 +88,7 @@ window.NethereumMetamaskInterop = {
     Sign: async (utf8HexMsg) => {
         try {
             const from = await getSelectedAddress();
-            console.log(from);
+            log(from);
             const params = [utf8HexMsg, from];
             const method = 'personal_sign';
             const rpcResponse = await metamaskRequest({
