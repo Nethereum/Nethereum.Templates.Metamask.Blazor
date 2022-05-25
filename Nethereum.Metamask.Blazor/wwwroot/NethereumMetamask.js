@@ -1,4 +1,6 @@
-﻿async function metamaskRequest(parsedMessage) {
+﻿logEnabled = false;
+
+async function metamaskRequest(parsedMessage) {
     try {
         console.log(parsedMessage);
         const response = await ethereum.request(parsedMessage);
@@ -8,12 +10,11 @@
             id: parsedMessage.id,
             error: null
         }
-        console.log("the response:");
-        console.log(rpcResponse);
-
+        log("request response:");
+        log(rpcResponse);
         return rpcResponse;
     } catch (e) {
-        console.log(e);
+        log("Error:" + e);
         let rpcResonseError = {
             jsonrpc: "2.0",
             id: parsedMessage.id,
@@ -32,6 +33,13 @@ async function getSelectedAddress() {
 async function getAddresses() {
    return await metamaskRequest({ method: 'eth_requestAccounts' });
 }
+
+function log(message) {
+    if (logEnabled) {
+        console.log(message);
+    }
+}
+
 
 window.NethereumMetamaskInterop = {
     EnableEthereum: async () => {
@@ -68,10 +76,10 @@ window.NethereumMetamaskInterop = {
 
     Send: async (message) => {
         return new Promise(function (resolve, reject) {
-            console.log(JSON.parse(message));
+            log(JSON.parse(message))
             ethereum.send(JSON.parse(message), function (error, result) {
-                console.log(result);
-                console.log(error);
+                log(result);
+                log(error);
                 resolve(JSON.stringify(result));
             });
         });
@@ -90,15 +98,13 @@ window.NethereumMetamaskInterop = {
             });
             return JSON.stringify(rpcResponse);
         } catch (e) {
-            console.log(e);
+            log("Error signing:" + e);
             let rpcResponseError = {
                 jsonrpc: "2.0",
                 id: parsedMessage.id,
                 error: e
             }
             return JSON.stringify(rpcResponseError);
-
         }
     }
-
 }
