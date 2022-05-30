@@ -29,10 +29,10 @@ namespace Nethereum.Metamask
         }
 
 
-        public Task<Web3.Web3> GetWeb3Async()
+        public Task<Web3.IWeb3> GetWeb3Async()
         {
             var web3 = new Nethereum.Web3.Web3 {Client = {OverridingRequestInterceptor = _metamaskInterceptor}};
-            return Task.FromResult(web3);
+            return Task.FromResult((Web3.IWeb3)web3);
         }
 
         public async Task<string> EnableProviderAsync()

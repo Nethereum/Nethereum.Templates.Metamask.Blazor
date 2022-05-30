@@ -18,7 +18,7 @@ namespace Nethereum.UI
         event Func<bool, Task> EnabledChanged;
 
         Task<bool> CheckProviderAvailabilityAsync();
-        Task<Web3.Web3> GetWeb3Async();
+        Task<Web3.IWeb3> GetWeb3Async();
         Task<string> EnableProviderAsync();
         Task<string> GetProviderSelectedAccountAsync();
         Task<string> SignMessageAsync(string message);
