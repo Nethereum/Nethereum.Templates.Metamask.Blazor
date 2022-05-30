@@ -1,30 +1,28 @@
-﻿@using Nethereum.UI
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Nethereum.UI
+@implements IDisposable;
 @inject IEthereumHostProvider _metamaskHostProvider;
-@inject NethereumSiweAuthenticatorService  _nethereumSiweAuthenticatorService;
 
 <div>
-    @if (MetamaskAvailable && !string.IsNullOrEmpty(SelectedAccount))
+    @if (MetamaskAvailable)
     {
-        @SelectedAccount
+        <AuthorizeView Roles="EthereumConnected">
+            <Authorized>
+                @SelectedAccount
+            </Authorized>
+            <NotAuthorized>
+                <button type="button" class="btnMetamask" @onclick="@EnableEthereumAsync">Connect Metamask</button>
+            </NotAuthorized>
+        </AuthorizeView>
+    }else{
+          <button class="btnMetamask" disabled>Please Install Metamask</button>   
     }
-
-    @if (MetamaskAvailable && string.IsNullOrEmpty(SelectedAccount))
-    {
-        <button type="button" class="btnMetamask" @onclick="@EnableEthereumAsync">Connect Metamask</button>
-    }
-
-    @if (!MetamaskAvailable)
-    {
-        <button class="btnMetamask" disabled>Please Install Metamask</button>
-    }
-
 </div>
 
 @code {
 
     bool MetamaskAvailable { get; set; }
     string SelectedAccount { get; set; }
-    protected string AuthenticatedAccount { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -32,9 +30,17 @@
         {
             _metamaskHostProvider.SelectedAccountChanged += MetamaskHostProvider_SelectedAccountChanged;
             MetamaskAvailable = await _metamaskHostProvider.CheckProviderAvailabilityAsync();
-
+            if (MetamaskAvailable)
+            {
+               SelectedAccount = await _metamaskHostProvider.GetProviderSelectedAccountAsync();
+            }
             StateHasChanged();
         }
+    }
+
+    public void Dispose()
+    {
+        _metamaskHostProvider.SelectedAccountChanged -= MetamaskHostProvider_SelectedAccountChanged;
     }
 
     private async Task MetamaskHostProvider_SelectedAccountChanged(string account)
@@ -43,10 +49,10 @@
         this.StateHasChanged();
     }
 
-    protected async Task EnableEthereumAsync()
+     protected async Task EnableEthereumAsync()
     {
         SelectedAccount = await _metamaskHostProvider.EnableProviderAsync();
     }
-
    
 }
+

@@ -2,6 +2,7 @@
 
 async function metamaskRequest(parsedMessage) {
     try {
+        ensureInitilised();
         log(parsedMessage);
         const response = await ethereum.request(parsedMessage);
         let rpcResponse = {
@@ -44,11 +45,9 @@ function log(message) {
     }
 }
 
-
-window.NethereumMetamaskInterop = {
-    EnableEthereum: async () => {
+function ensureInitilised() {
+    if (!initialised) {
         try {
-            const selectedAccount = getSelectedOrRequestAddress();
             ethereum.autoRefreshOnNetworkChange = false;
             ethereum.on("accountsChanged",
                 function (accounts) {
@@ -58,6 +57,20 @@ window.NethereumMetamaskInterop = {
                 function (chainId) {
                     DotNet.invokeMethodAsync('Nethereum.Metamask.Blazor', 'SelectedNetworkChanged', chainId.toString());
                 });
+            initialised = true;
+        } catch (error) {
+            return null;
+        }
+    }
+}
+
+initialised = false;
+
+window.NethereumMetamaskInterop = {
+    EnableEthereum: async () => {
+        try {
+            const selectedAccount = getSelectedOrRequestAddress();
+            ensureInitilised();
             return selectedAccount;
         } catch (error) {
             return null;

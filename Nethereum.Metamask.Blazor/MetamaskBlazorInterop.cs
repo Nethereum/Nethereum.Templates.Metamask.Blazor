@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 
 namespace Nethereum.Metamask.Blazor
 {
+
     public class MetamaskBlazorInterop : IMetamaskInterop
     {
         private readonly IJSRuntime _jsRuntime;
