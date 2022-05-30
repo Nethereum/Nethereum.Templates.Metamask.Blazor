@@ -1,160 +1,185 @@
 ﻿@page "/"
+@implements IDisposable;
 @using Nethereum.UI;
 @using Nethereum.Metamask;
 @using Nethereum.Erc20.Blazor;
 @inject IJSRuntime jsRuntime;
 @inject IEthereumHostProvider _ethereumHostProvider;
-@inject NethereumSiweAuthenticatorService  _nethereumSiweAuthenticatorService;
+@inject NethereumSiweAuthenticatorService _nethereumSiweAuthenticatorService;
 @inject NavigationManager _navigationManager
+@inject AuthenticationStateProvider _siweAuthenticationStateProvider;
 @using Nethereum.Web3;
 @using Nethereum.Hex.HexTypes;
 @using Nethereum.Siwe.Core
 @using Nethereum.Util
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@using ExampleProject.Server.Authentication
 
-@if (EthereumAvailable == true && !string.IsNullOrEmpty(SelectedAccount))
+
+@if (EthereumAvailable == true && SelectedAccount != null)
 {
-<div class="card m-1">
-    <div class="card-body">
-        <div class="row">
-            <label class="col-sm-3 col-form-label-lg">Selected Account:</label>
-            <div class="col-sm-6">
-                @SelectedAccount
-                <small id="selectedAccountHelp" class="form-text text-muted">The selected account is bound to the host (ie Metamask) on change</small>
+    <div class="card m-1">
+        <div class="card-body">
+            <div class="row">
+                <label class="col-sm-3 col-form-label-lg">Selected Account:</label>
+                <div class="col-sm-6">
+                    @SelectedAccount
+                    <small id="selectedAccountHelp" class="form-text text-muted">The selected account is bound to the host (ie Metamask) on change</small>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <label class="col-sm-3 col-form-label-lg">Selected Network ChainId:</label>
+                <div class="col-sm-6">
+                    @SelectedChainId
+                    <small id="selectedAccountHelp" class="form-text text-muted">The selected chain Id</small>
+                </div>
             </div>
         </div>
     </div>
-    <div class="card-body">
-        <div class="row">
-            <label class="col-sm-3 col-form-label-lg">Selected Network ChainId:</label>
-            <div class="col-sm-6">
-                @SelectedChainId
-                <small id="selectedAccountHelp" class="form-text text-muted">The selected chain Id</small>
+
+    <div class="card m-1">
+        <div class="card-body">
+            <div class="row">
+                <label class="col-sm-3 col-form-label-lg">Block hash of block number 0:</label>
+                <div class="col-sm-6">
+                    <button @onclick="@GetBlockHashAsync">Get BlockHash</button>
+                    <div>@BlockHash</div>
+                    <small id="selectedAccountHelp" class="form-text text-muted">With Metamask calls are redirected to its configured node (i.e http://localhost:8545)</small>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="card m-1">
-    <div class="card-body">
-        <div class="row">
-            <label class="col-sm-3 col-form-label-lg">Block hash of block number 0:</label>
-            <div class="col-sm-6">
-                <button @onclick="@GetBlockHashAsync">Get BlockHash</button>
-                <div>@BlockHash</div>
-                <small id="selectedAccountHelp" class="form-text text-muted">With Metamask calls are redirected to its configured node (i.e http://localhost:8545)</small>
+    <div class="card m-1">
+        <div class="card-body">
+            <div class="row">
+                <label class="col-sm-3 col-form-label-lg">Authentication by signing:</label>
+                <div class="col-sm-6">
+                    <button @onclick="@AuthenticateAsync">Authenticate</button>
+                    <div>@AuthenticatedAccount</div>
+                    <small id="selectedAccountHelp" class="form-text text-muted">Creating an unique challenge per authentication request, allows us to recover and validate what account has signed the message</small>
+                    <AuthorizeView>
+                        <Authorized>
+                            <div>Welcome: @UserName</div>
+                        </Authorized>
+                    </AuthorizeView>
+                    @if (ErrorAuthenticateMessage != null)
+                    {
+                        <div class="alert-danger">An error has occurred= @ErrorAuthenticateMessage</div>
+                    }
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="card m-1">
-    <div class="card-body">
-        <div class="row">
-            <label class="col-sm-3 col-form-label-lg">Authentication by signing:</label>
-            <div class="col-sm-6">
-                <button @onclick="@AuthenticateAsync">Authenticate</button>
-                <div>@AuthenticatedAccount</div>
-                <small id="selectedAccountHelp" class="form-text text-muted">Creating an unique challenge per authentication request, allows us to recover and validate what account has signed the message</small>
-                @if (ErrorAuthenticateMessage != null)
-                {
-                    <div class="alert-danger">An error has occurred= @ErrorAuthenticateMessage</div>
-                }
-            </div>
-        </div>
-    </div>
-</div>
 
 
-<Erc20Transfer></Erc20Transfer>
-} else
+    <Erc20Transfer></Erc20Transfer>
+}
+else
 {
-<div>
-    Please connect to Ethereum !
-</div>
+    <div>
+        Please connect to Ethereum !
+    </div>
 }
 
 
-    @code{
-        bool EthereumAvailable { get; set; }
-        string SelectedAccount { get; set; }
-        int SelectedChainId { get; set; }
-        string BlockHash { get; set; }
-        string ErrorAuthenticateMessage { get; set; }
+@code {
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
 
-        protected string AuthenticatedAccount { get; set; }
+    bool EthereumAvailable { get; set; }
+    string SelectedAccount { get; set; }
+    int SelectedChainId { get; set; }
+    string BlockHash { get; set; }
+    string ErrorAuthenticateMessage { get; set; }
 
-        protected override async Task OnAfterRenderAsync(bool firstTime)
+    string UserName { get; set; }
+    protected string AuthenticatedAccount { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _ethereumHostProvider.SelectedAccountChanged += HostProvider_SelectedAccountChanged;
+        _ethereumHostProvider.NetworkChanged += HostProvider_NetworkChanged;
+        _ethereumHostProvider.EnabledChanged += HostProviderOnEnabledChanged;
+    }
+
+    public void Dispose()
+    {
+        _ethereumHostProvider.SelectedAccountChanged -= HostProvider_SelectedAccountChanged;
+        _ethereumHostProvider.NetworkChanged -= HostProvider_NetworkChanged;
+        _ethereumHostProvider.EnabledChanged -= HostProviderOnEnabledChanged;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstTime)
+    {
+
+        if (firstTime)
         {
-            if (firstTime)
+            EthereumAvailable = await _ethereumHostProvider.CheckProviderAvailabilityAsync();
+
+            if (EthereumAvailable)
             {
-                _ethereumHostProvider.SelectedAccountChanged += HostProvider_SelectedAccountChanged;
-                _ethereumHostProvider.NetworkChanged += HostProvider_NetworkChanged;
-                _ethereumHostProvider.EnabledChanged += HostProviderOnEnabledChanged;
-
-                EthereumAvailable = await _ethereumHostProvider.CheckProviderAvailabilityAsync();
-
-            }
-        }
-
-        private async Task HostProviderOnEnabledChanged(bool enabled)
-        {
-            if (enabled)
-            {
+                SelectedAccount = await _ethereumHostProvider.GetProviderSelectedAccountAsync();
                 await GetChainId();
-                this.StateHasChanged();
             }
+
+            var authState = await AuthenticationState; ;
+            if (authState != null)
+            {
+                UserName = authState.User.FindFirst(c => c.Type.Contains(ClaimTypes.NameIdentifier))?.Value;
+            }
+            this.StateHasChanged();
         }
 
-        private async Task GetChainId()
-        {
-            var web3 = await _ethereumHostProvider.GetWeb3Async();
-            var chainId = await web3.Eth.ChainId.SendRequestAsync();
-            SelectedChainId = (int) chainId.Value;
-        }
 
-        private async Task HostProvider_SelectedAccountChanged(string account)
+    }
+
+    private async Task HostProviderOnEnabledChanged(bool enabled)
+    {
+        if (enabled)
         {
-            SelectedAccount = account;
             await GetChainId();
             this.StateHasChanged();
         }
-
-        private async Task HostProvider_NetworkChanged(int chainId)
-        {
-            SelectedChainId = chainId;
-            this.StateHasChanged();
-        }
-
-        protected async Task GetBlockHashAsync()
-        {
-            var web3 = await _ethereumHostProvider.GetWeb3Async();
-            var block = await web3.Eth.Blocks.GetBlockWithTransactionsByNumber.SendRequestAsync(new HexBigInteger(1));
-            BlockHash = block.BlockHash;
-        }
-
-        public async Task AuthenticateAsync()
-        {
-
-            try
-            {
-                ErrorAuthenticateMessage = null;
-                var siweMessage = await _nethereumSiweAuthenticatorService.RequestUserToSignAuthenticationMessageAsync(new SiweMessage()
-                {
-                    Address = SelectedAccount.ConvertToEthereumChecksumAddress(),
-                    ChainId = SelectedChainId.ToString(),
-                    Uri = _navigationManager.ToAbsoluteUri(@"").ToString(),
-                    Domain = _navigationManager.ToAbsoluteUri(@"/").Host,
-                    Statement = "Please sign in to authenticate to ExampleProject",
-
-                });
-
-                AuthenticatedAccount = siweMessage.Address;
-            }
-            catch (Exception ex)
-            {
-                ErrorAuthenticateMessage = ex.Message;
-            }
-
-        }
     }
+
+    private async Task GetChainId()
+    {
+        var web3 = await _ethereumHostProvider.GetWeb3Async();
+        var chainId = await web3.Eth.ChainId.SendRequestAsync();
+        SelectedChainId = (int)chainId.Value;
+    }
+
+    private async Task HostProvider_SelectedAccountChanged(string account)
+    {
+        SelectedAccount = account;
+        await GetChainId();
+        this.StateHasChanged();
+    }
+
+    private async Task HostProvider_NetworkChanged(int chainId)
+    {
+        SelectedChainId = chainId;
+        this.StateHasChanged();
+    }
+
+    protected async Task GetBlockHashAsync()
+    {
+        var web3 = await _ethereumHostProvider.GetWeb3Async();
+        var block = await web3.Eth.Blocks.GetBlockWithTransactionsByNumber.SendRequestAsync(new HexBigInteger(1));
+        BlockHash = block.BlockHash;
+    }
+
+    public async Task AuthenticateAsync()
+    {
+
+        await ((SiweAuthenticationStateProvider)_siweAuthenticationStateProvider).AuthenticateAsync(SelectedAccount);
+        var authState = await AuthenticationState; ;
+        UserName = authState.User.FindFirst(c => c.Type.Contains(ClaimTypes.NameIdentifier))?.Value;
+
+    }
+ }
 

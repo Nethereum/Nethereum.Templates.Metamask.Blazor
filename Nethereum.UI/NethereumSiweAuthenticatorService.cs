@@ -19,19 +19,19 @@ namespace Nethereum.UI
             
         }
 
-        public string BuildMessageToSign(SiweMessage siweMessage)
+        public string GenerateNewSiweMessage(SiweMessage siweMessage)
         {
             return _siweMessageService.BuildMessageToSign(siweMessage);
         }
 
-        public async Task<SiweMessage> RequestUserToSignAuthenticationMessageAsync(SiweMessage siweMessage)
+        public async Task<SiweMessage> AuthenticateAsync(SiweMessage siweMessage)
         {
             if (!_host.Available)
             {
                 throw new Exception("Cannot authenticate user, an Ethereum host is not available");
             }
 
-            var challenge = BuildMessageToSign(siweMessage);
+            var challenge = GenerateNewSiweMessage(siweMessage);
             var signedMessage = await _host.SignMessageAsync(challenge);
             if (await _siweMessageService.IsMessageSignatureValid(siweMessage, signedMessage))
             {
@@ -41,7 +41,11 @@ namespace Nethereum.UI
             throw new Exception("SiweMessage signed with an invalid Address");
         }
 
-
+        public void LogOut(SiweMessage siweMessage)
+        {
+            _siweMessageService.InvalidateSession(siweMessage);
+        }
 
     }
 }
+

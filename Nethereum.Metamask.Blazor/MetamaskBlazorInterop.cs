@@ -49,7 +49,11 @@ namespace Nethereum.Metamask.Blazor
         {
             var rpcJsonResponse = await _jsRuntime.InvokeAsync<string>("NethereumMetamaskInterop.GetAddresses");
             var accounts = ConvertResponse<string[]>(rpcJsonResponse);
-            return accounts[0];
+            if (accounts.Length > 0)
+                return accounts[0];
+            else
+                return null;
+
         }
 
 

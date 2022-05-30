@@ -26,6 +26,7 @@ public class SiweApiUserLoginService
     {
         _httpClient = httpClient;
     }
+
     public async Task<string> GenerateNewSiweMessage(string ethereumAddress)
     {
             

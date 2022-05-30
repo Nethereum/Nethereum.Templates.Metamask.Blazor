@@ -167,25 +167,5 @@
             var authState = await AuthenticationState;;
             UserName = authState.User.FindFirst(c => c.Type.Contains(ClaimTypes.NameIdentifier))?.Value;
 
-        //try
-        //{
-        //    ErrorAuthenticateMessage = null;
-        //    var siweMessage = await _nethereumSiweAuthenticatorService.RequestUserToSignAuthenticationMessageAsync(new SiweMessage()
-        //    {
-        //        Address = SelectedAccount,
-        //        ChainId = SelectedChainId.ToString(),
-        //        Uri = _navigationManager.ToAbsoluteUri("").ToString(),
-        //        Domain = _navigationManager.ToAbsoluteUri("").Host,
-        //        Statement = "Please sign in to authenticate to ExampleProject",
-
-        //    });
-
-        //    AuthenticatedAccount = siweMessage.Address;
-        //}
-        //catch (Exception ex)
-        //{
-        //    ErrorAuthenticateMessage = ex.Message;
-        //}
-
         }
     }

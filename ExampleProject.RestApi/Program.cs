@@ -14,6 +14,7 @@ services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"))
 
 var inMemorySessionNonceStorage = new InMemorySessionNonceStorage();
 services.AddScoped<ISessionStorage>(x => inMemorySessionNonceStorage);
+
 //we don't need a ethereumUserService (db or contract), ignore address 1271 validation web3
 services.AddScoped(x => new SiweMessageService(inMemorySessionNonceStorage, null, null));
 services.AddScoped<ISiweJwtAuthorisationService, SiweJwtAuthorisationService>();
@@ -24,7 +25,7 @@ var app = builder.Build();
 //app.UseAuthorization();
 app.UseCors(configure =>
 {
-    configure.WithOrigins("https://localhost:44337")
+    configure.WithOrigins("https://localhost:44337", "https://localhost:5001")
         .AllowAnyMethod()
         .AllowAnyHeader();
 });

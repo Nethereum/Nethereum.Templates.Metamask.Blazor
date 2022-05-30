@@ -1,4 +1,3 @@
-using ExampleProject.Server.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +10,8 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using Nethereum.Siwe;
+using ExampleProject.Server.Services;
+using ExampleProject.Server.Authentication;
 
 namespace ExampleProject.Server
 {
@@ -45,8 +46,8 @@ namespace ExampleProject.Server
 
 
             services.AddValidatorsFromAssemblyContaining<Nethereum.Erc20.Blazor.Erc20Transfer>();
-            services.AddSingleton<EthereumAuthenticationService>();
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+            services.AddScoped<IAccessTokenService, ProtectedSessionStorageAccessTokenService>();
+            services.AddScoped<AuthenticationStateProvider, SiweAuthenticationStateProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

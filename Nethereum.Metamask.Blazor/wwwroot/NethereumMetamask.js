@@ -24,14 +24,18 @@ async function metamaskRequest(parsedMessage) {
     }
 }
 
-async function getSelectedAddress() {
-    let accountsReponse = await getAddresses();
-    if (accountsReponse.error !== null) throw accountsReponse.error;
-    return accountsReponse.result[0];
+async function getSelectedOrRequestAddress() {
+    let accountsResponse = await requestAccounts();
+    if (accountsResponse.error !== null) throw accountsResponse.error;
+    return accountsResponse.result[0];
+}
+
+async function requestAccounts() {
+    return await metamaskRequest({ method: 'eth_requestAccounts' });
 }
 
 async function getAddresses() {
-   return await metamaskRequest({ method: 'eth_requestAccounts' });
+   return await metamaskRequest({ method: 'eth_accounts' });
 }
 
 function log(message) {
@@ -44,14 +48,14 @@ function log(message) {
 window.NethereumMetamaskInterop = {
     EnableEthereum: async () => {
         try {
-            const selectedAccount = getSelectedAddress();
+            const selectedAccount = getSelectedOrRequestAddress();
             ethereum.autoRefreshOnNetworkChange = false;
             ethereum.on("accountsChanged",
                 function (accounts) {
                     DotNet.invokeMethodAsync('Nethereum.Metamask.Blazor', 'SelectedAccountChanged', accounts[0]);
                 });
-            ethereum.on("networkChanged",
-                function (networkId) {
+            ethereum.on("chainChanged",
+                function (chainId) {
                     DotNet.invokeMethodAsync('Nethereum.Metamask.Blazor', 'SelectedNetworkChanged', chainId.toString());
                 });
             return selectedAccount;
@@ -87,7 +91,7 @@ window.NethereumMetamaskInterop = {
 
     Sign: async (utf8HexMsg) => {
         try {
-            const from = await getSelectedAddress();
+            const from = await getSelectedOrRequestAddress();
             log(from);
             const params = [utf8HexMsg, from];
             const method = 'personal_sign';
