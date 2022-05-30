@@ -1,0 +1,30 @@
+﻿@using ExampleProjectSiwe.Wasm.Authentication
+@inherits LayoutComponentBase
+@inject AuthenticationStateProvider _siweAuthenticationStateProvider;
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+    <div class="main">
+        <div class="top-row px-4">
+            <Metamask/>
+            <AuthorizeView Roles="SiweAuthenticated">
+                <Authorized>
+                    <div class="m-1">Hello, @context.User?.Identity?.Name</div> &nbsp; &nbsp;
+                    <button class="m-1" @onclick="LogOutUser">Logout</button>
+                </Authorized>
+            </AuthorizeView>
+        </div>
+        <div class="content px-4">
+            @Body
+        </div>
+    </div>
+</div>
+
+@code
+{
+    private async Task LogOutUser()
+    {
+        await ((SiweAuthenticationWasmStateProvider<User>)_siweAuthenticationStateProvider).LogOutUserAsync();
+    }
+}

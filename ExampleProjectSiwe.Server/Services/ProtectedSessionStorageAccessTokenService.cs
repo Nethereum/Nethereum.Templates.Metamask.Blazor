@@ -3,7 +3,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
-namespace ExampleProject.Server.Services
+namespace ExampleProjectSiwe.Server.Services
 {
     public class ProtectedSessionStorageAccessTokenService : IAccessTokenService
     {
