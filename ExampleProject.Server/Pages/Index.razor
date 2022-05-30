@@ -5,85 +5,69 @@
 @using Nethereum.Erc20.Blazor;
 @inject IJSRuntime jsRuntime;
 @inject IEthereumHostProvider _ethereumHostProvider;
-@inject NethereumSiweAuthenticatorService _nethereumSiweAuthenticatorService;
 @inject NavigationManager _navigationManager
-@inject AuthenticationStateProvider _siweAuthenticationStateProvider;
 @using Nethereum.Web3;
 @using Nethereum.Hex.HexTypes;
 @using Nethereum.Siwe.Core
 @using Nethereum.Util
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
-@using ExampleProject.Server.Authentication
 
 
-@if (EthereumAvailable == true && SelectedAccount != null)
-{
-    <div class="card m-1">
-        <div class="card-body">
-            <div class="row">
-                <label class="col-sm-3 col-form-label-lg">Selected Account:</label>
-                <div class="col-sm-6">
-                    @SelectedAccount
-                    <small id="selectedAccountHelp" class="form-text text-muted">The selected account is bound to the host (ie Metamask) on change</small>
+<AuthorizeView Roles="EthereumConnected">
+    <Authorized>
+        <div class="card m-1">
+            <div class="card-body">
+                <div class="row">
+                    <label class="col-sm-3 col-form-label-lg">Selected Account:</label>
+                    <div class="col-sm-6">
+                        @SelectedAccount
+                        <small id="selectedAccountHelp" class="form-text text-muted">The selected account is bound to the host (ie Metamask) on change</small>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label class="col-sm-3 col-form-label-lg">Selected Account from Claims Principal</label>
+                    <div class="col-sm-6">
+                        @context?.User?.FindFirst(c => c.Type.Contains(ClaimTypes.NameIdentifier))?.Value
+                        <small id="selectedAccountHelp" class="form-text text-muted">The selected account is bound to the claims principal</small>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <label class="col-sm-3 col-form-label-lg">Selected Network ChainId:</label>
+                    <div class="col-sm-6">
+                        @SelectedChainId
+                        <small id="selectedAccountHelp" class="form-text text-muted">The selected chain Id</small>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="card-body">
-            <div class="row">
-                <label class="col-sm-3 col-form-label-lg">Selected Network ChainId:</label>
-                <div class="col-sm-6">
-                    @SelectedChainId
-                    <small id="selectedAccountHelp" class="form-text text-muted">The selected chain Id</small>
+
+        <div class="card m-1">
+            <div class="card-body">
+                <div class="row">
+                    <label class="col-sm-3 col-form-label-lg">Block hash of block number 0:</label>
+                    <div class="col-sm-6">
+                        <button @onclick="@GetBlockHashAsync">Get BlockHash</button>
+                        <div>@BlockHash</div>
+                        <small id="selectedAccountHelp" class="form-text text-muted">With Metamask calls are redirected to its configured node (i.e http://localhost:8545)</small>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="card m-1">
-        <div class="card-body">
-            <div class="row">
-                <label class="col-sm-3 col-form-label-lg">Block hash of block number 0:</label>
-                <div class="col-sm-6">
-                    <button @onclick="@GetBlockHashAsync">Get BlockHash</button>
-                    <div>@BlockHash</div>
-                    <small id="selectedAccountHelp" class="form-text text-muted">With Metamask calls are redirected to its configured node (i.e http://localhost:8545)</small>
-                </div>
-            </div>
+        <Erc20Transfer></Erc20Transfer>
+    </Authorized>
+    <NotAuthorized>
+
+        <div>
+            Please connect to Ethereum !
         </div>
-    </div>
 
-    <div class="card m-1">
-        <div class="card-body">
-            <div class="row">
-                <label class="col-sm-3 col-form-label-lg">Authentication by signing:</label>
-                <div class="col-sm-6">
-                    <button @onclick="@AuthenticateAsync">Authenticate</button>
-                    <div>@AuthenticatedAccount</div>
-                    <small id="selectedAccountHelp" class="form-text text-muted">Creating an unique challenge per authentication request, allows us to recover and validate what account has signed the message</small>
-                    <AuthorizeView>
-                        <Authorized>
-                            <div>Welcome: @UserName</div>
-                        </Authorized>
-                    </AuthorizeView>
-                    @if (ErrorAuthenticateMessage != null)
-                    {
-                        <div class="alert-danger">An error has occurred= @ErrorAuthenticateMessage</div>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <Erc20Transfer></Erc20Transfer>
-}
-else
-{
-    <div>
-        Please connect to Ethereum !
-    </div>
-}
+    </NotAuthorized>
+</AuthorizeView>
 
 
 @code {
@@ -129,7 +113,7 @@ else
             var authState = await AuthenticationState; ;
             if (authState != null)
             {
-                UserName = authState.User.FindFirst(c => c.Type.Contains(ClaimTypes.NameIdentifier))?.Value;
+                UserName = authState.User.FindFirst(c => c.Type.Contains(ClaimTypes.Name))?.Value;
             }
             this.StateHasChanged();
         }
@@ -171,15 +155,6 @@ else
         var web3 = await _ethereumHostProvider.GetWeb3Async();
         var block = await web3.Eth.Blocks.GetBlockWithTransactionsByNumber.SendRequestAsync(new HexBigInteger(1));
         BlockHash = block.BlockHash;
-    }
-
-    public async Task AuthenticateAsync()
-    {
-
-        await ((SiweAuthenticationStateProvider)_siweAuthenticationStateProvider).AuthenticateAsync(SelectedAccount);
-        var authState = await AuthenticationState; ;
-        UserName = authState.User.FindFirst(c => c.Type.Contains(ClaimTypes.NameIdentifier))?.Value;
-
     }
  }
 
