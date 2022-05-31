@@ -31,6 +31,15 @@
     {
       "path": "ExampleProject.Wasm\\ExampleProject.Wasm.csproj"
     },
+  {
+      "path": "ExampleProjectSiwe.Server\\ExampleProjectSiwe.Server.csproj"
+    },
+    {
+      "path": "ExampleProjectSiwe.Wasm\\ExampleProjectSiwe.Wasm.csproj"
+    },
+   {
+      "path": "ExampleProjectSiwe.RestApi\\ExampleProjectSiwe.RestApi.csproj"
+    },
     {
       "path": "Nethereum.Erc20.Blazor\\Nethereum.Erc20.Blazor.csproj"
     },
