@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Nethereum.Metamask;
+using Nethereum.Blazor;
 using Nethereum.Metamask.Blazor;
 using Nethereum.UI;
 using FluentValidation;
@@ -33,10 +34,15 @@ namespace ExampleProject.Server
             services.AddScoped<IMetamaskInterop, MetamaskBlazorInterop>();
             services.AddScoped<MetamaskInterceptor>();
             services.AddScoped<MetamaskHostProvider>();
-            services.AddScoped<IEthereumHostProvider>(serviceProvider => 
+            //Add metamask as the selected ethereum host provider
+            services.AddScoped(services =>
             {
-                return serviceProvider.GetService<MetamaskHostProvider>();
+                var metamaskHostProvider = services.GetService<MetamaskHostProvider>();
+                var selectedHostProvider = new SelectedEthereumHostProviderService();
+                selectedHostProvider.SetSelectedEthereumHostProvider(metamaskHostProvider);
+                return selectedHostProvider;
             });
+
             services.AddScoped<IEthereumHostProvider, MetamaskHostProvider>();
             services.AddScoped<AuthenticationStateProvider, EthereumAuthenticationStateProvider>();
             services.AddValidatorsFromAssemblyContaining<Nethereum.Erc20.Blazor.Erc20Transfer>();

@@ -9,14 +9,13 @@ namespace Nethereum.UI
 {
     public class NethereumSiweAuthenticatorService
     {
-        private readonly IEthereumHostProvider _host;
         private readonly SiweMessageService _siweMessageService;
+        private readonly SelectedEthereumHostProviderService _selectedEthereumHostProviderService;
 
-        public NethereumSiweAuthenticatorService(IEthereumHostProvider host, ISessionStorage sessionStorage)
+        public NethereumSiweAuthenticatorService(SelectedEthereumHostProviderService selectedEthereumHostProviderService, ISessionStorage sessionStorage)
         {
-            _host = host;
             _siweMessageService = new SiweMessageService(sessionStorage);
-            
+            _selectedEthereumHostProviderService = selectedEthereumHostProviderService;
         }
 
         public string GenerateNewSiweMessage(SiweMessage siweMessage)
@@ -26,13 +25,14 @@ namespace Nethereum.UI
 
         public async Task<SiweMessage> AuthenticateAsync(SiweMessage siweMessage)
         {
-            if (!_host.Available)
+            var host = _selectedEthereumHostProviderService.SelectedHost;
+            if (host == null || !host.Available)
             {
                 throw new Exception("Cannot authenticate user, an Ethereum host is not available");
             }
 
             var challenge = GenerateNewSiweMessage(siweMessage);
-            var signedMessage = await _host.SignMessageAsync(challenge);
+            var signedMessage = await host.SignMessageAsync(challenge);
             if (await _siweMessageService.IsMessageSignatureValid(siweMessage, signedMessage))
             {
                 return siweMessage;

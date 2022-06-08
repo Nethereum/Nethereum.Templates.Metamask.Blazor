@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Nethereum.Siwe.Core;
 using Nethereum.UI;
 using Nethereum.Util;
-using Nethereum.Metamask.Blazor;
+using Nethereum.Blazor;
 using ExampleProjectSiwe.Wasm.Services;
 
 namespace ExampleProjectSiwe.Wasm.Authentication
@@ -16,14 +16,13 @@ namespace ExampleProjectSiwe.Wasm.Authentication
     {
         private readonly SiweApiUserLoginService<TUser> _siweUserLoginService;
         private readonly IAccessTokenService _accessTokenService;
-        private readonly IEthereumHostProvider _ethereumHostProvider;
+ 
 
         public SiweAuthenticationWasmStateProvider(SiweApiUserLoginService<TUser> siweUserLoginService,
-            IAccessTokenService accessTokenService, IEthereumHostProvider ethereumHostProvider) : base(ethereumHostProvider)
+            IAccessTokenService accessTokenService, SelectedEthereumHostProviderService selectedHostProviderService) : base(selectedHostProviderService)
         {
             _siweUserLoginService = siweUserLoginService;
             _accessTokenService = accessTokenService;
-            _ethereumHostProvider = ethereumHostProvider;
         }
 
         public async override Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -45,13 +44,13 @@ namespace ExampleProjectSiwe.Wasm.Authentication
 
         public async Task AuthenticateAsync(string address)
         {
-            if (!_ethereumHostProvider.Available)
+            if (EthereumHostProvider == null || !EthereumHostProvider.Available)
             {
                 throw new Exception("Cannot authenticate user, an Ethereum host is not available");
             }
 
             var siweMessage = await _siweUserLoginService.GenerateNewSiweMessage(address);
-            var signedMessage = await _ethereumHostProvider.SignMessageAsync(siweMessage);
+            var signedMessage = await EthereumHostProvider.SignMessageAsync(siweMessage);
             await AuthenticateAsync(SiweMessageParser.Parse(siweMessage), signedMessage);
         }
 

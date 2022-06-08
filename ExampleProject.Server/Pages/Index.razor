@@ -4,7 +4,7 @@
 @using Nethereum.Metamask;
 @using Nethereum.Erc20.Blazor;
 @inject IJSRuntime jsRuntime;
-@inject IEthereumHostProvider _ethereumHostProvider;
+@inject SelectedEthereumHostProviderService selectedHostProviderService
 @inject NavigationManager _navigationManager
 @using Nethereum.Web3;
 @using Nethereum.Hex.HexTypes;
@@ -82,9 +82,11 @@
 
     string UserName { get; set; }
     protected string AuthenticatedAccount { get; set; }
+    IEthereumHostProvider _ethereumHostProvider;
 
     protected override void OnInitialized()
     {
+         _ethereumHostProvider = selectedHostProviderService.SelectedHost;
         _ethereumHostProvider.SelectedAccountChanged += HostProvider_SelectedAccountChanged;
         _ethereumHostProvider.NetworkChanged += HostProvider_NetworkChanged;
         _ethereumHostProvider.EnabledChanged += HostProviderOnEnabledChanged;

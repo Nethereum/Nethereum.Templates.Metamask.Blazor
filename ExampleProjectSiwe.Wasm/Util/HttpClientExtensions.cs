@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace ExampleProjectSiwe.Wasm.Util
 {
+    //This could be replaced with ReFit https://github.com/reactiveui/refit
+    //https://github.com/reactiveui/refit#bearer-authentication
     public static class HttpClientExtensions
     {
         public static async Task<T> GetAsync<T>(this HttpClient httpClient,

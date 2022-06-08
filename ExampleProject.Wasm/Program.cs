@@ -12,6 +12,7 @@ using Nethereum.Metamask.Blazor;
 using Nethereum.Metamask;
 using FluentValidation;
 using Microsoft.AspNetCore.Components.Authorization;
+using Nethereum.Blazor;
 
 namespace ExampleProject.Wasm
 {
@@ -27,10 +28,17 @@ namespace ExampleProject.Wasm
             builder.Services.AddSingleton<IMetamaskInterop, MetamaskBlazorInterop>();
             builder.Services.AddSingleton<MetamaskInterceptor>();
             builder.Services.AddSingleton<MetamaskHostProvider>();
-            builder.Services.AddSingleton<IEthereumHostProvider>(serviceProvider =>
+            
+            //Add metamask as the selected ethereum host provider
+            builder.Services.AddSingleton(services =>
             {
-                return serviceProvider.GetService<MetamaskHostProvider>();
+                var metamaskHostProvider = services.GetService<MetamaskHostProvider>();
+                var selectedHostProvider = new SelectedEthereumHostProviderService();
+                selectedHostProvider.SetSelectedEthereumHostProvider(metamaskHostProvider);
+                return selectedHostProvider;
             });
+               
+            
             builder.Services.AddSingleton<AuthenticationStateProvider, EthereumAuthenticationStateProvider>();
 
             builder.Services.AddValidatorsFromAssemblyContaining<Nethereum.Erc20.Blazor.Erc20Transfer>();

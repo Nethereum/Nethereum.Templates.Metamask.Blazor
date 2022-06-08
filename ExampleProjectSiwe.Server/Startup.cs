@@ -34,9 +34,13 @@ namespace ExampleProjectSiwe.Server
             services.AddScoped<IMetamaskInterop, MetamaskBlazorInterop>();
             services.AddScoped<MetamaskInterceptor>();
             services.AddScoped<MetamaskHostProvider>();
-            services.AddScoped<IEthereumHostProvider>(serviceProvider =>
+            //Add metamask as the selected ethereum host provider
+            services.AddScoped(services =>
             {
-                return serviceProvider.GetService<MetamaskHostProvider>();
+                var metamaskHostProvider = services.GetService<MetamaskHostProvider>();
+                var selectedHostProvider = new SelectedEthereumHostProviderService();
+                selectedHostProvider.SetSelectedEthereumHostProvider(metamaskHostProvider);
+                return selectedHostProvider;
             });
             services.AddScoped<IEthereumHostProvider, MetamaskHostProvider>();
             var inMemorySessionNonceStorage = new InMemorySessionNonceStorage();

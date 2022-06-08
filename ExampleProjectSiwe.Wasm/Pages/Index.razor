@@ -2,7 +2,7 @@
 @using Nethereum.Erc20.Blazor;
 @implements IDisposable;
 @inject IJSRuntime jsRuntime;
-@inject IEthereumHostProvider _ethereumHostProvider;
+@inject SelectedEthereumHostProviderService selectedHostProviderService;
 @inject NethereumSiweAuthenticatorService _nethereumSiweAuthenticatorService;
 @inject NavigationManager _navigationManager
 @inject AuthenticationStateProvider _siweAuthenticationStateProvider;
@@ -105,9 +105,11 @@
     string ErrorAuthenticateMessage { get; set; }
     string UserName { get; set; }
     protected string AuthenticatedAccount { get; set; }
+    IEthereumHostProvider _ethereumHostProvider;
 
     protected override void OnInitialized()
     {
+         _ethereumHostProvider = selectedHostProviderService.SelectedHost;
         _ethereumHostProvider.SelectedAccountChanged += HostProvider_SelectedAccountChanged;
         _ethereumHostProvider.NetworkChanged += HostProvider_NetworkChanged;
         _ethereumHostProvider.EnabledChanged += HostProviderOnEnabledChanged;

@@ -1,7 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 @using Nethereum.UI
 @implements IDisposable;
-@inject IEthereumHostProvider _metamaskHostProvider;
+@inject MetamaskHostProvider _metamaskHostProvider;
+@inject SelectedEthereumHostProviderService _selectedHostProvider;
 
 <div>
     @if (MetamaskAvailable)
@@ -52,6 +53,7 @@
      protected async Task EnableEthereumAsync()
     {
         SelectedAccount = await _metamaskHostProvider.EnableProviderAsync();
+
     }
    
 }

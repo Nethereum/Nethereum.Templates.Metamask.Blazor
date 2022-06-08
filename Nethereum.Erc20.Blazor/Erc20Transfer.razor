@@ -3,7 +3,7 @@
 @using Accelist.FluentValidation.Blazor;
 @using Microsoft.AspNetCore.Components.Forms
 @using Nethereum.Contracts.Standards.ERC20.ContractDefinition
-@inject IEthereumHostProvider _ethereuHostProvider;
+@inject SelectedEthereumHostProviderService selectedHostProviderService;
 
 <div class="card">
     <h5 class="card-header">Transfer ERC0 Token</h5>
@@ -78,7 +78,7 @@
             TransactionHash = null;
 
             var functionTransfer = transferModel.GetTransferFunction();
-            var web3 = await _ethereuHostProvider.GetWeb3Async();
+            var web3 = await selectedHostProviderService.SelectedHost.GetWeb3Async();
             var contractHandler = web3.Eth.GetContractTransactionHandler<TransferFunction>();
             TransactionHash = await contractHandler.SendRequestAsync(transferModel.ERC20Contract.Address, functionTransfer);
             this.StateHasChanged();

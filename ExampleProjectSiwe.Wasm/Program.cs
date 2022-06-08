@@ -27,17 +27,22 @@ namespace ExampleProjectSiwe.Wasm
             builder.Services.AddAuthorizationCore();
 
             //builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5047") });
+            builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5048") });
 
             var inMemorySessionNonceStorage = new InMemorySessionNonceStorage();
             builder.Services.AddSingleton<ISessionStorage>(x => inMemorySessionNonceStorage);
             builder.Services.AddSingleton<IMetamaskInterop, MetamaskBlazorInterop>();
             builder.Services.AddSingleton<MetamaskInterceptor>();
             builder.Services.AddSingleton<MetamaskHostProvider>();
-            builder.Services.AddSingleton<IEthereumHostProvider>(serviceProvider =>
+            //Add metamask as the selected ethereum host provider
+            builder.Services.AddSingleton(services =>
             {
-                return serviceProvider.GetService<MetamaskHostProvider>();
+                var metamaskHostProvider = services.GetService<MetamaskHostProvider>();
+                var selectedHostProvider = new SelectedEthereumHostProviderService();
+                selectedHostProvider.SetSelectedEthereumHostProvider(metamaskHostProvider);
+                return selectedHostProvider;
             });
+
             builder.Services.AddSingleton<NethereumSiweAuthenticatorService>();
             builder.Services.AddSingleton<IAccessTokenService, LocalStorageAccessTokenService>();
             builder.Services.AddSingleton<SiweApiUserLoginService<User>>();

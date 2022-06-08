@@ -4,16 +4,42 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Nethereum.UI;
 using System.Security.Claims;
 
-namespace Nethereum.Metamask.Blazor
+namespace Nethereum.Blazor
 {
     public class EthereumAuthenticationStateProvider : AuthenticationStateProvider, IDisposable
     {
-        private readonly IEthereumHostProvider _ethereumHostProvider;
+        protected IEthereumHostProvider EthereumHostProvider { get; set; }
+        protected SelectedEthereumHostProviderService SelectedHostProviderService { get; }
 
-        public EthereumAuthenticationStateProvider(IEthereumHostProvider ethereumHostProvider)
+        public EthereumAuthenticationStateProvider(SelectedEthereumHostProviderService selectedHostProviderService)
         {
-            _ethereumHostProvider = ethereumHostProvider;
-            _ethereumHostProvider.SelectedAccountChanged += SelectedAccountChanged;
+            SelectedHostProviderService = selectedHostProviderService;
+            SelectedHostProviderService.SelectedHostProviderChanged += SelectedHostProviderChanged;
+            InitSelectedHostProvider();
+        }
+
+        private Task SelectedHostProviderChanged(IEthereumHostProvider newEthereumHostProvider)
+        {
+            if(EthereumHostProvider != newEthereumHostProvider)
+            {
+                if(EthereumHostProvider != null)
+                {
+                    EthereumHostProvider.SelectedAccountChanged -= SelectedAccountChanged;
+                }
+                InitSelectedHostProvider();
+            }
+
+            return Task.CompletedTask;
+           
+        }
+
+        public void InitSelectedHostProvider()
+        {
+            EthereumHostProvider = SelectedHostProviderService.SelectedHost;
+            if (SelectedHostProviderService.SelectedHost != null)
+            {
+                EthereumHostProvider.SelectedAccountChanged += SelectedAccountChanged;
+            }
         }
 
         private async Task SelectedAccountChanged(string ethereumAddress)
@@ -30,9 +56,9 @@ namespace Nethereum.Metamask.Blazor
 
         public async override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            if (_ethereumHostProvider.Available)
+            if (EthereumHostProvider.Available)
             {
-                var currentAddress = await _ethereumHostProvider.GetProviderSelectedAccountAsync();
+                var currentAddress = await EthereumHostProvider.GetProviderSelectedAccountAsync();
                 if (currentAddress != null)
                 {
                     var claimsPrincipal = GetClaimsPrincipal(currentAddress);
@@ -46,7 +72,7 @@ namespace Nethereum.Metamask.Blazor
 
         public async Task NotifyAuthenticationStateAsEthereumConnected()
         {
-            var currentAddress = await _ethereumHostProvider.GetProviderSelectedAccountAsync();
+            var currentAddress = await EthereumHostProvider.GetProviderSelectedAccountAsync();
             await NotifyAuthenticationStateAsEthereumConnected(currentAddress);
         }
 
@@ -79,7 +105,15 @@ namespace Nethereum.Metamask.Blazor
 
         public void Dispose()
         {
-            _ethereumHostProvider.SelectedAccountChanged -= SelectedAccountChanged;
+            if (EthereumHostProvider != null)
+            {
+                EthereumHostProvider.SelectedAccountChanged -= SelectedAccountChanged;
+            }
+
+            if (SelectedHostProviderService != null)
+            {
+                SelectedHostProviderService.SelectedHostProviderChanged -= SelectedHostProviderChanged;
+            }
         }
     }
 }

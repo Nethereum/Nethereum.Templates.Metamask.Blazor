@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Nethereum.Siwe.Core;
 using Nethereum.UI;
 using Nethereum.Util;
-using Nethereum.Metamask.Blazor;
+using Nethereum.Blazor;
 using ExampleProjectSiwe.Server.Services;
 
 namespace ExampleProjectSiwe.Server.Authentication
@@ -14,16 +14,14 @@ namespace ExampleProjectSiwe.Server.Authentication
     {
         private readonly NethereumSiweAuthenticatorService nethereumSiweAuthenticatorService;
         private readonly IAccessTokenService _accessTokenService;
-        private readonly IEthereumHostProvider _ethereumHostProvider;
         private readonly IUserService<TUser> _userService;
 
         public SiweAuthenticationServerStateProvider(NethereumSiweAuthenticatorService nethereumSiweAuthenticatorService,
-            IAccessTokenService accessTokenService, IEthereumHostProvider ethereumHostProvider, IUserService<TUser> userService) : base(ethereumHostProvider)
+            IAccessTokenService accessTokenService, SelectedEthereumHostProviderService selectedHostProviderService, IUserService<TUser> userService) : base(selectedHostProviderService)
         {
 
             this.nethereumSiweAuthenticatorService = nethereumSiweAuthenticatorService;
             _accessTokenService = accessTokenService;
-            _ethereumHostProvider = ethereumHostProvider;
             _userService = userService;
         }
 
@@ -42,13 +40,15 @@ namespace ExampleProjectSiwe.Server.Authentication
 
         public async Task AuthenticateAsync(string address = null)
         {
-            if (!_ethereumHostProvider.Available)
+            
+            if (EthereumHostProvider == null  || !EthereumHostProvider.Available)
             {
                 throw new Exception("Cannot authenticate user, an Ethereum host is not available");
             }
+
             if (string.IsNullOrEmpty(address))
             {
-                address = await _ethereumHostProvider.GetProviderSelectedAccountAsync();
+                address = await EthereumHostProvider.GetProviderSelectedAccountAsync();
             }
             var siweMessage = new DefaultSiweMessage();
             siweMessage.Address = address.ConvertToEthereumChecksumAddress();
