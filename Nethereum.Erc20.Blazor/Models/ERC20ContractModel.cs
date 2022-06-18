@@ -1,4 +1,8 @@
-﻿namespace Nethereum.Erc20.Blazor
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
+
+namespace Nethereum.Erc20.Blazor
 {
     public class ERC20ContractModel
     {
@@ -10,4 +14,6 @@
         public int DecimalPlaces { get; set; } = DEFAULT_DECIMALS;
         public string Name { get; set; }
     }
+   
 }
+

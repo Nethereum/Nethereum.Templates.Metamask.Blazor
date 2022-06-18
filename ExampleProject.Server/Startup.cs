@@ -45,7 +45,7 @@ namespace ExampleProject.Server
 
             services.AddScoped<IEthereumHostProvider, MetamaskHostProvider>();
             services.AddScoped<AuthenticationStateProvider, EthereumAuthenticationStateProvider>();
-            services.AddValidatorsFromAssemblyContaining<Nethereum.Erc20.Blazor.Erc20Transfer>();
+
    
         }
 

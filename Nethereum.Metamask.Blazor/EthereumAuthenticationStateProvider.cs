@@ -18,6 +18,11 @@ namespace Nethereum.Blazor
             InitSelectedHostProvider();
         }
 
+        public void NotifyStateHasChanged()
+        {
+            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+        }
+
         private Task SelectedHostProviderChanged(IEthereumHostProvider newEthereumHostProvider)
         {
             if(EthereumHostProvider != newEthereumHostProvider)
@@ -56,7 +61,7 @@ namespace Nethereum.Blazor
 
         public async override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            if (EthereumHostProvider.Available)
+            if (EthereumHostProvider != null && EthereumHostProvider.Available)
             {
                 var currentAddress = await EthereumHostProvider.GetProviderSelectedAccountAsync();
                 if (currentAddress != null)
