@@ -9,7 +9,7 @@
 <div>
     @if (MetamaskAvailable)
     {
-        <AuthorizeView Roles="EthereumConnected">
+        <AuthorizeView Roles="EthereumConnected, Owner">
             <Authorized>
                <button type="button" class="btnMetamask btnMetamaskSelected">@Truncate(SelectedAccount, SelectedAccountTruncateLength)</button>
             </Authorized>

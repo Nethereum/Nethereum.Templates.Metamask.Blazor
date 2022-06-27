@@ -72,7 +72,6 @@ namespace Nethereum.Blazor
             }
            
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
-           
         }
 
         public async Task NotifyAuthenticationStateAsEthereumConnected()
@@ -89,7 +88,6 @@ namespace Nethereum.Blazor
 
         public async Task NotifyAuthenticationStateAsEthereumDisconnected()
         {
-           
             var identity = new ClaimsIdentity();
             var user = new ClaimsPrincipal(identity);
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
@@ -97,13 +95,27 @@ namespace Nethereum.Blazor
 
         private ClaimsPrincipal GetClaimsPrincipal(string ethereumAddress)
         {
-            var claimEthereumAddress = new Claim(ClaimTypes.NameIdentifier, ethereumAddress);
-            var claimEthereumConnectedRole = new Claim(ClaimTypes.Role, "EthereumConnected");
+            Claim claimEthereumAddress;
+            Claim claimEthereumConnectedRole;
+            ClaimsIdentity claimsIdentity;
+            ClaimsPrincipal claimsPrincipal;
 
-            //create claimsIdentity
-            var claimsIdentity = new ClaimsIdentity(new[] { claimEthereumAddress, claimEthereumConnectedRole }, "ethereumConnection");
-            //create claimsPrincipal
-            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+            if (ethereumAddress == "0x44E768c7e21bA56C12B5c83f1868638fd55637D0")
+            {
+                claimEthereumAddress = new Claim(ClaimTypes.NameIdentifier, ethereumAddress);
+                claimEthereumConnectedRole = new Claim(ClaimTypes.Role, "OwnerConnected");
+
+                claimsIdentity = new ClaimsIdentity(new[] { claimEthereumAddress, claimEthereumConnectedRole }, "ownerConnected");
+                claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+            }
+            else
+            {
+                claimEthereumAddress = new Claim(ClaimTypes.NameIdentifier, ethereumAddress);
+                claimEthereumConnectedRole = new Claim(ClaimTypes.Role, "EthereumConnected");
+
+                claimsIdentity = new ClaimsIdentity(new[] { claimEthereumAddress, claimEthereumConnectedRole }, "ethereumConnection");
+                claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+            }
 
             return claimsPrincipal;
         }
