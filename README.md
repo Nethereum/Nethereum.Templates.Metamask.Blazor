@@ -1,4 +1,4 @@
-# Nethereum.Metamask.Blazor
+# Nethereum.Templates.Metamask.Blazor
 This projects provides both the components and and quick start example/template on how to integrate Metamask + Nethereum using Blazor interop. The project allows you to work both in Wasm and Server side, so you can create a fully decentralised application using Wasm or semi-decentralised using server hosted components (Web3+Web2).
 
 Both project types include and example on how to:
