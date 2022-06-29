@@ -1,7 +1,7 @@
 {
     "author": "Juan Blanco",
     "classifications": ["Nethereum", "Blazor", "Metamask"],
-    "name": "Nethereum Blazor / Metamask template",
+    "name": "Nethereum Blazor / Metamask",
     "tags": {
         "language": "C#"
     },
@@ -17,7 +17,7 @@
       }
     },
     "identity": "nethererum.blazor.metamask",
-    "shortName": "nethereum-mm-lazor",
+    "shortName": "nethereum-mm-blazor",
     "sourceName": "NethereumMetamaskBlazor",
     "guids": [
         "{3133878D-33AA-465B-A468-200850EAC35E}",
