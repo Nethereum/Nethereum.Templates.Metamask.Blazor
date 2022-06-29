@@ -1,7 +1,7 @@
 {
     "author": "Juan Blanco",
     "classifications": ["Nethereum", "Blazor", "Metamask"],
-    "name": "Nethereum Blazor / Metamask",
+    "name": "Nethereum Blazor / Metamask Wasm/Server Projects",
     "tags": {
         "language": "C#"
     },
