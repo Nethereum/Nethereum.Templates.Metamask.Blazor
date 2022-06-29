@@ -1,7 +1,7 @@
 {
     "author": "Juan Blanco",
     "classifications": ["Nethereum", "Blazor", "Metamask"],
-    "name": "Nethereum Blazor / Metamask sample",
+    "name": "Nethereum Blazor / Metamask template",
     "tags": {
         "language": "C#"
     },
@@ -16,9 +16,9 @@
         "defaultValue": "MyProject"
       }
     },
-    "identity": "nethererum.blazor",
-    "shortName": "nethereumblazor",
-    "sourceName": "NethereumBlazor",
+    "identity": "nethererum.blazor.metamask",
+    "shortName": "nethereum-mm-lazor",
+    "sourceName": "NethereumMetamaskBlazor",
     "guids": [
         "{3133878D-33AA-465B-A468-200850EAC35E}",
         "{22573139-3C34-4943-9056-D72D46B634BB}",
@@ -31,26 +31,8 @@
     {
       "path": "ExampleProject.Wasm\\ExampleProject.Wasm.csproj"
     },
-  {
-      "path": "ExampleProjectSiwe.Server\\ExampleProjectSiwe.Server.csproj"
-    },
-    {
-      "path": "ExampleProjectSiwe.Wasm\\ExampleProjectSiwe.Wasm.csproj"
-    },
-   {
-      "path": "ExampleProjectSiwe.RestApi\\ExampleProjectSiwe.RestApi.csproj"
-    },
     {
       "path": "Nethereum.Erc20.Blazor\\Nethereum.Erc20.Blazor.csproj"
-    },
-    {
-      "path": "Nethereum.Metamask\\Nethereum.Metamask.csproj"
-    },
-    {
-      "path": "Nethereum.Metamask.Blazor\\Nethereum.Metamask.Blazor.csproj"
-    },
-    {
-      "path": "Nethereum.UI\\Nethereum.UI.csproj"
     }
   ],
     "exclude": ["**/[Bb]in/**", "**/[Oo]bj/**", ".template.config/**/*", "**/*.lock.json"]
