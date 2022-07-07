@@ -9,7 +9,7 @@
       "ProjectName": {
         "type": "parameter",
         "datatype": "text",
-        "description": "Renames files containing 'ExampleProject'",
+        "description": "The ProjectName to be used instead of 'ExampleProject'",
         "fileRename": "ExampleProject",
         "replaces": "ExampleProject",
         "isRequired": true,
@@ -18,7 +18,6 @@
     },
     "identity": "nethererum.blazor.metamask",
     "shortName": "nethereum-mm-blazor",
-    "sourceName": "NethereumMetamaskBlazor",
     "guids": [
         "{3133878D-33AA-465B-A468-200850EAC35E}",
         "{22573139-3C34-4943-9056-D72D46B634BB}",
