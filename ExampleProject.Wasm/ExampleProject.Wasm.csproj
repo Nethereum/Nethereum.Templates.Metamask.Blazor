@@ -9,13 +9,14 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.2" PrivateAssets="all" />
-    <PackageReference Include="Nethereum.Metamask.Blazor" Version="4.6.1" />
-    <PackageReference Include="Nethereum.UI" Version="4.6.1" />
-	<PackageReference Include="Nethereum.Web3" Version="4.6.1" />
     <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Nethereum\src\Nethereum.Metamask.Blazor\Nethereum.Metamask.Blazor.csproj" />
+    <ProjectReference Include="..\..\Nethereum\src\Nethereum.Signer.EIP712\Nethereum.Signer.EIP712.csproj" />
+    <ProjectReference Include="..\..\Nethereum\src\Nethereum.UI\Nethereum.UI.csproj" />
+    <ProjectReference Include="..\..\Nethereum\src\Nethereum.Web3\Nethereum.Web3.csproj" />
     <ProjectReference Include="..\Nethereum.Erc20.Blazor\Nethereum.Erc20.Blazor.csproj" />
   </ItemGroup>
 

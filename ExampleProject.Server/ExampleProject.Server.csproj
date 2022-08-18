@@ -6,12 +6,12 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="9.4.0" />
-	<PackageReference Include="Nethereum.Metamask.Blazor" Version="4.6.1" />
-	<PackageReference Include="Nethereum.UI" Version="4.6.1" />
-	<PackageReference Include="Nethereum.Web3" Version="4.6.1" />
   </ItemGroup>
 
   <ItemGroup>
+	  <ProjectReference Include="..\..\Nethereum\src\Nethereum.Metamask.Blazor\Nethereum.Metamask.Blazor.csproj" />
+	  <ProjectReference Include="..\..\Nethereum\src\Nethereum.UI\Nethereum.UI.csproj" />
+	  <ProjectReference Include="..\..\Nethereum\src\Nethereum.Web3\Nethereum.Web3.csproj" />
     <ProjectReference Include="..\Nethereum.Erc20.Blazor\Nethereum.Erc20.Blazor.csproj" />
   </ItemGroup>
 

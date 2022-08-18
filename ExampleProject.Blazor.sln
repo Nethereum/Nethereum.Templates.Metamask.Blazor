@@ -9,6 +9,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleProject.Server", "Ex
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleProject.Wasm", "ExampleProject.Wasm\ExampleProject.Wasm.csproj", "{BBEF0F1B-F19C-4011-A2A2-E84FB1733653}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethereum.Metamask.Blazor", "..\Nethereum\src\Nethereum.Metamask.Blazor\Nethereum.Metamask.Blazor.csproj", "{694971CE-14C6-436C-8868-9B9FEC944682}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethereum.Web3", "..\Nethereum\src\Nethereum.Web3\Nethereum.Web3.csproj", "{6F31394C-2775-4F29-B370-A3C32FE67F66}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethereum.UI", "..\Nethereum\src\Nethereum.UI\Nethereum.UI.csproj", "{70EA8839-D497-4D96-8F95-E1F467B9BF31}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethereum.Metamask", "..\Nethereum\src\Nethereum.Metamask\Nethereum.Metamask.csproj", "{4CC93781-5950-4A69-97EB-2DCE97835A8C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethereum.Signer.EIP712", "..\Nethereum\src\Nethereum.Signer.EIP712\Nethereum.Signer.EIP712.csproj", "{1BD61B5A-7402-4CE4-895D-041DBA98756F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +37,26 @@ Global
 		{BBEF0F1B-F19C-4011-A2A2-E84FB1733653}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBEF0F1B-F19C-4011-A2A2-E84FB1733653}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBEF0F1B-F19C-4011-A2A2-E84FB1733653}.Release|Any CPU.Build.0 = Release|Any CPU
+		{694971CE-14C6-436C-8868-9B9FEC944682}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{694971CE-14C6-436C-8868-9B9FEC944682}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{694971CE-14C6-436C-8868-9B9FEC944682}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{694971CE-14C6-436C-8868-9B9FEC944682}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F31394C-2775-4F29-B370-A3C32FE67F66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F31394C-2775-4F29-B370-A3C32FE67F66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F31394C-2775-4F29-B370-A3C32FE67F66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F31394C-2775-4F29-B370-A3C32FE67F66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70EA8839-D497-4D96-8F95-E1F467B9BF31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70EA8839-D497-4D96-8F95-E1F467B9BF31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70EA8839-D497-4D96-8F95-E1F467B9BF31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70EA8839-D497-4D96-8F95-E1F467B9BF31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CC93781-5950-4A69-97EB-2DCE97835A8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CC93781-5950-4A69-97EB-2DCE97835A8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CC93781-5950-4A69-97EB-2DCE97835A8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CC93781-5950-4A69-97EB-2DCE97835A8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BD61B5A-7402-4CE4-895D-041DBA98756F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BD61B5A-7402-4CE4-895D-041DBA98756F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BD61B5A-7402-4CE4-895D-041DBA98756F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BD61B5A-7402-4CE4-895D-041DBA98756F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
