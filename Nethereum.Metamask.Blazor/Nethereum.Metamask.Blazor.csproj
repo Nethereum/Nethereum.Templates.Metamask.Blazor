@@ -13,6 +13,7 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\..\BitLotto.Web\Shared\BitLotto.Web.Shared.csproj" />
     <ProjectReference Include="..\Nethereum.Metamask\Nethereum.Metamask.csproj" />
   </ItemGroup>
 

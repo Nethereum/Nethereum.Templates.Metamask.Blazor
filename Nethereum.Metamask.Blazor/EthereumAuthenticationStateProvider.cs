@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Authorization;
 using Nethereum.UI;
 using System.Security.Claims;
+using BitLotto.Web.Shared;
+using System.Linq;
 
 namespace Nethereum.Blazor
 {
@@ -100,12 +102,20 @@ namespace Nethereum.Blazor
             ClaimsIdentity claimsIdentity;
             ClaimsPrincipal claimsPrincipal;
 
-            if (ethereumAddress == "0x44E768c7e21bA56C12B5c83f1868638fd55637D0")
+            if (ethereumAddress == EthAddresses.Admin.Owner)
             {
                 claimEthereumAddress = new Claim(ClaimTypes.NameIdentifier, ethereumAddress);
                 claimEthereumConnectedRole = new Claim(ClaimTypes.Role, "OwnerConnected");
 
                 claimsIdentity = new ClaimsIdentity(new[] { claimEthereumAddress, claimEthereumConnectedRole }, "ownerConnected");
+                claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+            }
+            else if(EthAddresses.Admin.Admins.Contains(ethereumAddress))
+            {
+                claimEthereumAddress = new Claim(ClaimTypes.NameIdentifier, ethereumAddress);
+                claimEthereumConnectedRole = new Claim(ClaimTypes.Role, "AdminConnected");
+
+                claimsIdentity = new ClaimsIdentity(new[] { claimEthereumAddress, claimEthereumConnectedRole }, "adminConnected");
                 claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             }
             else
