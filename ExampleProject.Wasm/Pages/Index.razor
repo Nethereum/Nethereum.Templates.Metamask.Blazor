@@ -171,7 +171,7 @@
     {
         var web3 = await _ethereumHostProvider.GetWeb3Async();
         var chainId = await web3.Eth.ChainId.SendRequestAsync();
-        SelectedChainId = (int)chainId.Value;
+        SelectedChainId = (long)chainId.Value;
     }
 
     private async Task HostProvider_SelectedAccountChanged(string account)
