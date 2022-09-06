@@ -19,6 +19,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethereum.Metamask", "..\Ne
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethereum.Signer.EIP712", "..\Nethereum\src\Nethereum.Signer.EIP712\Nethereum.Signer.EIP712.csproj", "{1BD61B5A-7402-4CE4-895D-041DBA98756F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethereum.ABI", "..\Nethereum\src\Nethereum.ABI\Nethereum.ABI.csproj", "{43725E97-322A-4BBD-890C-BA2EB381A7F1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethereum.RPC", "..\Nethereum\src\Nethereum.RPC\Nethereum.RPC.csproj", "{D0C98BA2-367B-46AC-A884-CDD906D0506E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +61,14 @@ Global
 		{1BD61B5A-7402-4CE4-895D-041DBA98756F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BD61B5A-7402-4CE4-895D-041DBA98756F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BD61B5A-7402-4CE4-895D-041DBA98756F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43725E97-322A-4BBD-890C-BA2EB381A7F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43725E97-322A-4BBD-890C-BA2EB381A7F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43725E97-322A-4BBD-890C-BA2EB381A7F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43725E97-322A-4BBD-890C-BA2EB381A7F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0C98BA2-367B-46AC-A884-CDD906D0506E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0C98BA2-367B-46AC-A884-CDD906D0506E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0C98BA2-367B-46AC-A884-CDD906D0506E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0C98BA2-367B-46AC-A884-CDD906D0506E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
