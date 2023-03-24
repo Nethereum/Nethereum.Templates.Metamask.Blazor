@@ -26,7 +26,6 @@ namespace ExampleProject.Wasm
 
             builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddSingleton<IMetamaskInterop, MetamaskBlazorInterop>();
-            builder.Services.AddSingleton<MetamaskInterceptor>();
             builder.Services.AddSingleton<MetamaskHostProvider>();
             
             //Add metamask as the selected ethereum host provider
