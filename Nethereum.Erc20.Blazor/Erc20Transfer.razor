@@ -13,7 +13,7 @@
                 <EditForm Model="transferModel" OnValidSubmit="@TransferAsync">
                     <FluentValidator Validator="@validator"></FluentValidator>
                     <div class="form-group row">
-                        <label for="" class="col-sm-1 col-form-label">Contract Address:</label>
+                        <label for="TokenContractAddress" class="col-sm-1 col-form-label">Contract Address:</label>
                         <div class="col-sm-10">
                             <InputText id="TokenContractAddress" class="form-control" @bind-Value="transferModel.ERC20Contract.Address" type="text" />
                             <small id="TokenContractAddressHelp" class="form-text text-muted">The ERC20 contract address</small>
@@ -21,7 +21,7 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="" class="col-sm-1 col-form-label">Decimal Places:</label>
+                        <label for="TokenDecimalPlaces" class="col-sm-1 col-form-label">Decimal Places:</label>
                         <div class="col-sm-10">
                             <input id="TokenDecimalPlaces" class="form-control" @bind="transferModel.ERC20Contract.DecimalPlaces" type="text" />
                             <small id="TokenDecimalPlacesHelp" class="form-text text-muted">The number of decimal places of ERC20 Token</small>
@@ -38,7 +38,7 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="etherAmount" class="col-sm-1 col-form-label">Token Amount:</label>
+                        <label for="tokenAmount" class="col-sm-1 col-form-label">Token Amount:</label>
                         <div class="col-sm-10">
                             <input id="tokenAmount" class="form-control" @bind="transferModel.Value" type="text" />
                             <small id="tokenAmountHelp" class="form-text text-muted">The token amount to transfer</small>
