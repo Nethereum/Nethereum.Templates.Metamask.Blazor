@@ -17,7 +17,7 @@
     <PackageReference Include="Nethereum.UI" Version="4.14.0" />
     <PackageReference Include="Nethereum.Web3" Version="4.14.0" />
     <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
-    <PackageReference Include="System.Text.Json" Version="7.0.2" />
+    <PackageReference Include="System.Text.Json" Version="8.0.4" />
   </ItemGroup>
 
   <ItemGroup>
